@@ -1,24 +1,12 @@
-# spa-backoffice
+# EcoDeli Back Office — SPA
 
-## Project setup
-```
-npm install
-```
+Ce projet est une Single Page Application (SPA) développée avec **Vue.js**.  
+Il constitue le back-office de gestion d'EcoDeli, permettant de gérer les utilisateurs, consulter les statistiques et autres fonctionnalités administratives.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Description
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+L'application SPA permet pour l'instant de de :
+- Gérer les utilisateurs (validation, suppression, affectation de rôles, etc.)
+- Visualiser les statistiques globales via le dashboard
+- Afficher et télécharger des documents d'identité dans une fenêtre modale
+- Filtrer et rechercher les utilisateurs via une barre de recherche intégrée
