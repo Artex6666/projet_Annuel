@@ -52,7 +52,7 @@ ___________________________________________________________________________
 
     dotenv : chargement des variables d'environnement
 
-### Auteur(s)
+### Auteurs
 
     Thomas Gallois (2A2)
 
