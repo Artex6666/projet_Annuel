@@ -1,0 +1,282 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "EcoDeli API",
+    "version": "1.0.0",
+    "description": "Documentation de l'API pour EcoDeli"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Serveur local"
+    }
+  ],
+  "paths": {
+    "/api/users": {
+      "get": {
+        "summary": "Récupère la liste de tous les utilisateurs",
+        "responses": {
+          "200": {
+            "description": "Liste des utilisateurs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/User" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Crée un nouvel utilisateur",
+        "requestBody": {
+          "description": "Données de l'utilisateur à créer",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Utilisateur créé",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/pending": {
+      "get": {
+        "summary": "Récupère la liste des utilisateurs non validés",
+        "responses": {
+          "200": {
+            "description": "Liste des utilisateurs en attente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/User" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/validated": {
+      "get": {
+        "summary": "Récupère la liste des utilisateurs validés",
+        "responses": {
+          "200": {
+            "description": "Liste des utilisateurs validés",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/User" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "summary": "Récupère un utilisateur par son ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Utilisateur trouvé",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          },
+          "404": { "description": "Utilisateur non trouvé" }
+        }
+      },
+      "delete": {
+        "summary": "Supprime un utilisateur",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Utilisateur supprimé" }
+        }
+      }
+    },
+    "/api/users/{id}/validate": {
+      "post": {
+        "summary": "Valide un utilisateur",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Utilisateur validé" }
+        }
+      }
+    },
+    "/api/users/{id}/recheck": {
+      "post": {
+        "summary": "Renvoyer un utilisateur en vérification",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Utilisateur renvoyé en vérification" }
+        }
+      }
+    },
+    "/api/users/{id}/role": {
+      "post": {
+        "summary": "Met à jour le rôle d'un utilisateur",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "description": "Nouveau rôle pour l'utilisateur",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Rôle mis à jour" }
+        }
+      }
+    },
+    "/api/users/{id}/documents": {
+      "get": {
+        "summary": "Récupère les documents d'un utilisateur",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documents de l'utilisateur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": { "type": "integer" },
+                    "docs": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Document" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stats": {
+      "get": {
+        "summary": "Récupère les statistiques globales du Dashboard",
+        "responses": {
+          "200": {
+            "description": "Statistiques du Dashboard",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Stats"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "type": { "type": "string" },
+          "is_validated": { "type": "integer" },
+          "role": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "UserInput": {
+        "type": "object",
+        "required": ["name", "email", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "type": { "type": "string" }
+        }
+      },
+      "Document": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "document_name": { "type": "string" },
+          "document_url": { "type": "string" }
+        }
+      },
+      "Stats": {
+        "type": "object",
+        "properties": {
+          "clients": { "type": "integer" },
+          "prestataires": { "type": "integer" },
+          "colisLivres": { "type": "integer" }
+        }
+      }
+    }
+  }
+}
