@@ -17,6 +17,10 @@
         <p>Prestataires</p>
       </div>
       <div class="stat">
+        <h3>{{ stats.livreurs }}</h3>
+        <p>Livreurs</p>
+      </div>
+      <div class="stat">
         <h3>{{ stats.colisLivres }}</h3>
         <p>Colis finalisés (24h)</p>
       </div>
@@ -34,6 +38,7 @@ export default {
       stats: {
         clients: 0,
         prestataires: 0,
+        livreurs: 0,
         colisLivres: 0
       }
     }

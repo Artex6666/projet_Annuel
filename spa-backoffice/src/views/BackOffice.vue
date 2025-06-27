@@ -13,13 +13,15 @@
   import SidebarMenu from "@/components/SidebarMenu.vue"
   import Dashboard from "@/views/DashboardView.vue"
   import UserManagement from "@/components/UserManagement.vue"
+  import AnnonceManagement from "@/components/AnnonceManagement.vue"
   
   export default {
     name: "BackOffice",
     components: {
       SidebarMenu,
       Dashboard,
-      UserManagement
+      UserManagement,
+      AnnonceManagement
     },
     data() {
       return {
@@ -33,6 +35,8 @@
             return Dashboard
           case "utilisateurs":
             return UserManagement
+          case "annonces":
+            return AnnonceManagement
           default:
             return Dashboard
         }

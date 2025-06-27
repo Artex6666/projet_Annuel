@@ -1,0 +1,107 @@
+<div class="register-bg">
+  <svg class="register-bg-shape" viewBox="0 0 1440 320" width="100%" height="auto" preserveAspectRatio="none" style="position:absolute;top:0;left:0;right:0;width:100vw;min-width:100%;height:220px;pointer-events:none;z-index:1;"><path fill="#27ae60" fill-opacity="0.18" d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,133.3C840,107,960,85,1080,101.3C1200,117,1320,171,1380,197.3L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+  <svg class="register-bg-shape2" viewBox="0 0 1440 320" width="100%" height="auto" preserveAspectRatio="none" style="position:absolute;bottom:0;left:0;right:0;width:100vw;min-width:100%;height:180px;pointer-events:none;z-index:1;"><path fill="#2980b9" fill-opacity="0.13" d="M0,64L60,101.3C120,139,240,213,360,229.3C480,245,600,203,720,181.3C840,160,960,160,1080,154.7C1200,149,1320,139,1380,133.3L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+  <div class="container py-5 register-content">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0 animate-fadein" style="border-radius:1.2rem; background:#f8f9fa;">
+          <div class="card-body p-5">
+            <h2 class="mb-4 text-center fw-bold display-6 animate-slidein">Inscription</h2>
+            <form id="registerForm">
+              <div class="row mb-3">
+                <div class="col animate-fadein-delay">
+                  <label for="firstname" class="form-label">Prénom</label>
+                  <input type="text" class="form-control register-input" id="firstname" name="firstname" required>
+                </div>
+                <div class="col animate-fadein-delay2">
+                  <label for="lastname" class="form-label">Nom</label>
+                  <input type="text" class="form-control register-input" id="lastname" name="lastname" required>
+                </div>
+              </div>
+              <div class="mb-3 animate-fadein-delay">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control register-input" id="email" name="email" required>
+              </div>
+              <div class="mb-3 animate-fadein-delay2">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input type="password" class="form-control register-input" id="password" name="password" required>
+              </div>
+              <button type="submit" class="btn btn-success w-100 py-2 animate-fadein-delay2 register-btn">S'inscrire</button>
+              <div id="registerError" class="text-danger mt-2" style="display:none;"></div>
+            </form>
+            <div class="mt-3 text-center animate-fadein-delay2">
+              <a href="#" id="openLoginModalFromRegister" class="text-secondary">Déjà un compte ? Se connecter</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.register-bg {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(120deg, #eafaf1 0%, #f4f8fb 100%);
+  overflow: hidden;
+  z-index: 0;
+}
+.register-bg-shape, .register-bg-shape2 {
+  position: absolute;
+  left: 0; right: 0;
+  width: 100vw;
+  min-width: 100%;
+  pointer-events: none;
+  display: block;
+}
+.register-bg-shape {
+  top: 0;
+  height: 220px;
+  z-index: 1;
+}
+.register-bg-shape2 {
+  bottom: 0;
+  height: 180px;
+  z-index: 1;
+}
+.register-content {
+  position: relative;
+  z-index: 2;
+}
+.register-input {
+  transition: box-shadow 0.3s, border-color 0.3s;
+  border-radius: 0.7rem;
+  background: #f8f9fa;
+}
+.register-input:focus {
+  border-color: #27ae60;
+  box-shadow: 0 0 0 0.2rem rgba(39,174,96,0.13);
+  background: #fff;
+}
+.register-btn {
+  background: linear-gradient(90deg,#27ae60,#2980b9);
+  border: none;
+  box-shadow: 0 4px 16px rgba(41,128,185,0.08);
+  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+.register-btn:hover {
+  background: linear-gradient(90deg,#2980b9,#27ae60);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 32px rgba(39,174,96,0.13);
+}
+.animate-fadein { animation: fadein 1.2s; }
+.animate-fadein-delay { animation: fadein 1.2s 0.5s both; }
+.animate-fadein-delay2 { animation: fadein 1.2s 1s both; }
+.animate-slidein { animation: slidein 1.2s; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slidein { from { opacity: 0; transform: translateY(40px);} to { opacity: 1; transform: none; } }
+</style>
+<script src="/js/script.js"></script>
+<script>
+document.getElementById('openLoginModalFromRegister')?.addEventListener('click', function(e) {
+  e.preventDefault();
+  const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+  modal.show();
+  document.body.classList.add('modal-open');
+});
+</script>

@@ -1,5 +1,6 @@
 // seed.js
 const db = require('./models/db');
+const bcrypt = require('bcrypt');
 
 const users = [
   { name: "Alice Dupont", email: "alice@example.com", type: "client", is_validated: 1, role: "membre" },
@@ -14,12 +15,13 @@ const users = [
   { name: "Julien Roche", email: "julien@example.com", type: "client", is_validated: 1, role: "moderateur" }
 ];
 
-const insertUser = (user) => {
-  return new Promise((resolve, reject) => {
+const insertUser = async (user) => {
+  return new Promise(async (resolve, reject) => {
     const { name, email, type, is_validated, role } = user;
+    const password = await bcrypt.hash('password', 10); // mot de passe par défaut
     db.run(
-      "INSERT INTO users (name, email, type, is_validated, role) VALUES (?, ?, ?, ?, ?)",
-      [name, email, type, is_validated, role],
+      "INSERT INTO users (name, email, type, is_validated, role, password) VALUES (?, ?, ?, ?, ?, ?)",
+      [name, email, type, is_validated, role, password],
       function(err) {
         if (err) {
           return reject(err);

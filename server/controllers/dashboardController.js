@@ -3,7 +3,6 @@ const db = require('../models/db');
 const DashboardController = {
   getStats: async (req, res) => {
     try {
-
       const clientsRow = await new Promise((resolve, reject) => {
         db.get("SELECT COUNT(*) AS total FROM users WHERE type = 'client'", (err, row) => {
           if (err) reject(err);
@@ -11,9 +10,15 @@ const DashboardController = {
         });
       });
 
-
       const prestatairesRow = await new Promise((resolve, reject) => {
         db.get("SELECT COUNT(*) AS total FROM users WHERE type = 'prestataire'", (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+        });
+      });
+
+      const livreursRow = await new Promise((resolve, reject) => {
+        db.get("SELECT COUNT(*) AS total FROM users WHERE type = 'livreur'", (err, row) => {
           if (err) reject(err);
           else resolve(row);
         });
@@ -24,6 +29,7 @@ const DashboardController = {
       res.json({
         clients: clientsRow.total,
         prestataires: prestatairesRow.total,
+        livreurs: livreursRow.total,
         colisLivres: colis24h
       });
     } catch (error) {

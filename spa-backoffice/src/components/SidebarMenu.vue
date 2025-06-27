@@ -4,6 +4,10 @@
       <h2>EcoDeli Admin</h2>
     </div>
     <ul class="sidebar-menu">
+      <li @click="goToAccueil">
+        <i class="fas fa-arrow-left"></i>
+        <span>Retour à l'accueil</span>
+      </li>
       <li :class="{ active: currentPage === 'dashboard' }" @click="$emit('change-page', 'dashboard')">
         <i class="fas fa-home"></i>
         <span>Dashboard</span>
@@ -12,9 +16,9 @@
         <i class="fas fa-user"></i>
         <span>Utilisateurs</span>
       </li>
-      <li>
+      <li :class="{ active: currentPage === 'annonces' }" @click="$emit('change-page', 'annonces')">
         <i class="fas fa-calendar-alt"></i>
-        <span>Annonces & Réservations</span>
+        <span>Gestion des Annonces</span>
       </li>
       <li>
         <i class="fas fa-credit-card"></i>
@@ -39,6 +43,11 @@ export default {
     currentPage: {
       type: String,
       default: "dashboard"
+    }
+  },
+  methods: {
+    goToAccueil() {
+      window.location.href = 'http://localhost:4000/';
     }
   }
 }

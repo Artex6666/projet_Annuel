@@ -1,0 +1,42 @@
+<% if (!annonce) { %>
+  <div class="container py-5">
+    <div class="alert alert-danger text-center my-5 shadow">
+      <i class="bi bi-exclamation-triangle display-4 mb-3"></i><br>
+      <span class="fs-3"><%= error || 'Annonce introuvable.' %></span>
+    </div>
+    <div class="text-center">
+      <a href="/annonces" class="btn btn-outline-primary mt-3"><i class="bi bi-arrow-left"></i> Retour aux annonces</a>
+    </div>
+  </div>
+<% } else { %>
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-lg border-0 animate__animated animate__fadeIn">
+          <div class="row g-0">
+            <div class="col-md-5 d-flex align-items-center justify-content-center bg-light rounded-start">
+              <img src="<%= annonce.image ? 'http://localhost:3000' + annonce.image : '/images/no-image.png' %>" alt="Image annonce" class="img-fluid rounded m-3" style="max-height:320px;object-fit:cover;">
+            </div>
+            <div class="col-md-7">
+              <div class="card-body d-flex flex-column h-100">
+                <h2 class="card-title mb-3 fw-bold"><i class="bi bi-box-seam text-success me-2"></i><%= annonce.titre %></h2>
+                <p class="card-text fs-5 mb-4"><%= annonce.description %></p>
+                <ul class="list-unstyled mb-4">
+                  <li class="mb-2"><i class="bi bi-geo-alt text-primary"></i> <strong>Départ :</strong> <%= annonce.depart %></li>
+                  <li class="mb-2"><i class="bi bi-flag text-warning"></i> <strong>Arrivée :</strong> <%= annonce.arrivee %></li>
+                  <li class="mb-2"><i class="bi bi-calendar-event text-info"></i> <strong>Date :</strong> <%= annonce.date %></li>
+                  <li class="mb-2"><i class="bi bi-cash-coin text-success"></i> <strong>Rémunération :</strong> <%= annonce.remuneration %> €</li>
+                  <li class="mb-2"><i class="bi bi-tag text-info"></i> <strong>Type :</strong> <%= annonce.type %></li>
+                </ul>
+                <div class="mt-auto">
+                  <a href="/annonces" class="btn btn-outline-primary"><i class="bi bi-arrow-left"></i> Retour aux annonces</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/> 

@@ -102,7 +102,7 @@
     >
       <div class="modal-content" @click.stop>
         <button class="close-button" @click="closeModal">X</button>
-        <h3>Documents de l'utilisateur {{ selectedUserDocs.userId }}</h3>
+        <h3>Documents de {{ selectedUserDocs.userName }}</h3>
         <ul>
           <li v-for="doc in selectedUserDocs.docs" :key="doc.id">
             <div v-if="doc.document_url.endsWith('.pdf')">
@@ -131,6 +131,21 @@
 <script>
 import axios from "axios";
 
+// Configuration globale d'axios
+axios.defaults.withCredentials = true;
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+// Création d'une instance axios avec la configuration de base
+const api = axios.create({
+  baseURL: 'http://localhost:3000',
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest'
+  }
+});
+
 export default {
   name: "UserManagement",
   data() {
@@ -139,10 +154,10 @@ export default {
       validatedUsers: [],
       dropdownOpen: null,
       selectedUserDocs: null,
-
       searchTerm: "",
       searchBy: "global",        
-      filterDropdownOpen: false
+      filterDropdownOpen: false,
+      error: null
     };
   },
   computed: {
@@ -154,16 +169,39 @@ export default {
     }
   },
   methods: {
+    async created() {
+      console.log("Component created - Fetching users...");
+      await this.fetchUsers();
+    },
     async fetchUsers() {
+      console.log("fetchUsers called - Starting API request...");
       try {
-        const [pendingRes, validatedRes] = await Promise.all([
-          axios.get("http://localhost:3000/api/users/pending"),
-          axios.get("http://localhost:3000/api/users/validated")
-        ]);
-        this.pendingUsers = pendingRes.data;
-        this.validatedUsers = validatedRes.data;
+        console.log("Making API request to /api/users/with-documents");
+        const usersWithDocsRes = await api.get("/api/users/with-documents");
+        console.log("API response received:", usersWithDocsRes);
+        
+        // Sépare les utilisateurs en attente et validés
+        this.pendingUsers = usersWithDocsRes.data.filter(user => !user.is_validated);
+        this.validatedUsers = usersWithDocsRes.data.filter(user => user.is_validated);
+        this.error = null;
       } catch (err) {
-        console.error(err);
+        console.log("API request failed:", err);
+        console.error('Erreur lors de la récupération des utilisateurs:', err);
+        if (err.response) {
+          console.error('Réponse du serveur:', err.response.data);
+          console.error('Status:', err.response.status);
+          console.error('Headers:', err.response.headers);
+          this.error = `Erreur ${err.response.status}: ${err.response.data.message || 'Erreur serveur'}`;
+          if (err.response.status === 401) {
+            window.location.href = 'http://localhost:4000/';
+          }
+        } else if (err.request) {
+          console.error('Pas de réponse reçue:', err.request);
+          this.error = 'Erreur de connexion au serveur';
+        } else {
+          console.error('Erreur de configuration:', err.message);
+          this.error = 'Erreur de configuration';
+        }
       }
     },
     // Applique la recherche selon searchBy
@@ -192,38 +230,49 @@ export default {
 
     async validateUser(userId) {
       try {
-        await axios.post(`http://localhost:3000/api/users/${userId}/validate`);
+        await api.post(`/api/users/${userId}/validate`);
         this.fetchUsers();
+        this.error = null;
       } catch (err) {
-        console.error(err);
+        this.handleError(err);
       }
     },
     async deleteUser(userId) {
       if (!confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) return;
       try {
-        await axios.delete(`http://localhost:3000/api/users/${userId}`);
+        await api.delete(`/api/users/${userId}`);
         this.fetchUsers();
+        this.error = null;
       } catch (err) {
-        console.error(err);
+        this.handleError(err);
       }
     },
     async recheckUser(userId) {
       try {
-        await axios.post(`http://localhost:3000/api/users/${userId}/recheck`);
+        await api.post(`/api/users/${userId}/recheck`);
         this.fetchUsers();
+        this.error = null;
       } catch (err) {
-        console.error(err);
+        this.handleError(err);
       }
     },
 
-    showDocuments(userId) {
-      this.selectedUserDocs = {
-        userId,
-        docs: [
-          { id: 1, document_name: "Carte d'identité", document_url: "/path/carte_id.pdf" },
-          { id: 2, document_name: "Photo Profil", document_url: "/path/photo.jpg" }
-        ]
-      };
+    async showDocuments(userId) {
+      try {
+        const [docsRes, userRes] = await Promise.all([
+          api.get(`/api/users/${userId}/documents`),
+          api.get(`/api/users/${userId}`)
+        ]);
+        
+        this.selectedUserDocs = { 
+          userId,
+          userName: userRes.data.name,
+          docs: docsRes.data.docs 
+        };
+        this.error = null;
+      } catch (err) {
+        this.handleError(err);
+      }
     },
     closeModal() {
       this.selectedUserDocs = null;
@@ -238,11 +287,12 @@ export default {
     },
     async updateRole(userId, role) {
       try {
-        await axios.post(`http://localhost:3000/api/users/${userId}/role`, { role });
+        await api.post(`/api/users/${userId}/role`, { role });
         this.fetchUsers();
         this.dropdownOpen = null;
+        this.error = null;
       } catch (err) {
-        console.error(err);
+        this.handleError(err);
       }
     },
 
@@ -279,6 +329,22 @@ export default {
         case 'moderateur': return 'Modérateur';
         case 'administrateur': return 'Administrateur';
         default: return 'Membre';
+      }
+    },
+
+    // Méthode utilitaire pour gérer les erreurs
+    handleError(err) {
+      console.error('Erreur:', err);
+      if (err.response) {
+        this.error = `Erreur ${err.response.status}: ${err.response.data.message || 'Erreur serveur'}`;
+        if (err.response.status === 401) {
+          alert('Session expirée. Veuillez vous reconnecter.');
+          window.location.href = 'http://localhost:4000/';
+        }
+      } else if (err.request) {
+        this.error = 'Erreur de connexion au serveur';
+      } else {
+        this.error = 'Erreur de configuration';
       }
     }
   },
