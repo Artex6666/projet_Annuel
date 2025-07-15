@@ -1,0 +1,73 @@
+<div class="container py-5">
+  <h2 class="mb-4 fw-bold text-center">📦 Mes livraisons</h2>
+
+  <% if (livraisons.length === 0) { %>
+    <div class="alert alert-info text-center">
+      <i class="bi bi-info-circle"></i> Aucune livraison en cours pour le moment.
+    </div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle shadow-sm">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Titre</th>
+            <th>Départ</th>
+            <th>Arrivée</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% livraisons.forEach(function(livraison, i) { %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <td><%= livraison.titre %></td>
+              <td><%= livraison.depart %></td>
+              <td><%= livraison.arrivee %></td>
+              <td><%= livraison.date %></td>
+              <td><%= livraison.type %></td>
+              <td>
+                <% if (livraison.statut === 'livree') { %>
+                  <span class="badge bg-success">Livrée</span>
+                <% } else if (livraison.statut === 'en_livraison') { %>
+                  <span class="badge bg-primary">En livraison</span>
+                <% } else if (livraison.statut === 'en_attente') { %>
+                  <span class="badge bg-warning text-dark">En attente</span>
+                <% } else { %>
+                  <span class="badge bg-secondary"><%= livraison.statut %></span>
+                <% } %>
+              </td>
+              <td class="d-flex gap-1 flex-wrap">
+                <% if (livraison.statut === 'en_attente') { %>
+                  <form method="POST" action="/livraison/<%= livraison.id %>/depart">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                      <i class="bi bi-truck"></i> Départ
+                    </button>
+                  </form>
+                  <form method="POST" action="/livraison/<%= livraison.id %>/annuler">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                      <i class="bi bi-x-circle"></i> Annuler
+                    </button>
+                  </form>
+                <% } else if (livraison.statut === 'en_livraison') { %>
+                  <form method="POST" action="/livraison/<%= livraison.id %>/valider">
+                    <button type="submit" class="btn btn-sm btn-outline-success">
+                      <i class="bi bi-flag-checkered"></i> Valider
+                    </button>
+                  </form>
+                <% } else if (livraison.statut === 'livree') { %>
+                  <i class="bi bi-check2-all text-success fs-5"></i>
+                <% } else { %>
+                  <span class="text-muted">Aucune action</span>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>

@@ -1,0 +1,11 @@
+# Dossier des dépendances Node.js
+node_modules/
+
+# Fichiers  log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.env
+
+

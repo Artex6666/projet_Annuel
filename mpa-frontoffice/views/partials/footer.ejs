@@ -1,0 +1,71 @@
+<footer class="footer-dark text-white py-4" style="background: #181818;">
+  <div class="container text-center">
+    <div class="mb-2">
+      <a href="/" class="footer-brand text-white fw-bold" style="text-decoration:none; font-size:1.3rem;">EcoDeli</a>
+    </div>
+    <div class="mb-2">
+      <a href="/annonces" class="footer-link text-white mx-2">Annonces</a>
+      <a href="/register" class="footer-link text-white mx-2">S'inscrire</a>
+      <a href="/login" class="footer-link text-white mx-2">Se connecter</a>
+    </div>
+    <div style="font-size:0.95rem; opacity:0.7;">&copy; <%= new Date().getFullYear() %> EcoDeli. Tous droits réservés.</div>
+  </div>
+  <style>
+    .footer-dark { box-shadow: 0 -2px 16px rgba(0,0,0,0.12); }
+    .footer-link { transition: color 0.2s; }
+    .footer-link:hover { color: #27ae60 !important; text-decoration: underline; }
+    .footer-brand:hover { color: #2980b9 !important; }
+  </style>
+</footer>
+
+<script>
+// Affichage du bouton admin si l'utilisateur est admin
+(function() {
+  fetch('http://localhost:3000/api/users/me', {
+    credentials: 'include'
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.user && data.user.role === 'administrateur') {
+      const btn = document.createElement('img');
+      btn.src = '/images/param.png';
+      btn.alt = 'Accès administration';
+      btn.id = 'adminParamBtn';
+      btn.style.position = 'fixed';
+      btn.style.bottom = '32px';
+      btn.style.right = '32px';
+      btn.style.width = '56px';
+      btn.style.height = '56px';
+      btn.style.cursor = 'pointer';
+      btn.style.zIndex = '9999';
+      btn.style.boxShadow = '0 4px 16px rgba(0,0,0,0.18)';
+      btn.style.background = 'rgba(255,255,255,0.4)';
+      btn.style.borderRadius = '50%';
+      btn.style.padding = '8px';
+      btn.style.transition = 'all 0.3s ease';
+      
+      // Ajout d'effets de survol
+      btn.onmouseover = function() {
+        btn.style.transform = 'rotate(45deg) scale(1.1)';
+        btn.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+        btn.style.background = 'rgba(255,255,255,0.6)';
+      };
+      
+      btn.onmouseout = function() {
+        btn.style.transform = 'rotate(0deg) scale(1)';
+        btn.style.boxShadow = '0 4px 16px rgba(0,0,0,0.18)';
+        btn.style.background = 'rgba(255,255,255,0.4)';
+      };
+
+      btn.onclick = function() {
+        window.location.href = 'http://localhost:8080/';
+      };
+      document.body.appendChild(btn);
+    }
+  })
+  .catch(err => {
+    console.error('Erreur lors de la vérification du rôle administrateur:', err);
+  });
+})();
+</script>
+

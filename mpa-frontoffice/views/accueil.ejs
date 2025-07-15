@@ -1,0 +1,166 @@
+<div class="container-fluid p-0">
+  <!-- HERO / CONCEPT avec fond dégradé, animation, ellipses SVG animées -->
+  <section class="hero-section text-center text-white py-5 position-relative animate-fadein w-100" style="background: linear-gradient(120deg, #27ae60 0%, #2980b9 100%); overflow: hidden; margin: 0; padding-top: 60px; min-height: calc(100vh - 64px); display: flex; flex-direction: column; justify-content: center;">
+    <!-- Ellipses SVG animées, bien visibles -->
+    <svg class="hero-ellipses" width="100%" height="100%" viewBox="0 0 1440 400" style="position:absolute;top:0;left:0;z-index:0;pointer-events:none;">
+      <ellipse class="ellipse-move ellipse1" cx="350" cy="110" rx="220" ry="80" fill="#fff" fill-opacity="0.18"/>
+      <ellipse class="ellipse-move ellipse2" cx="1150" cy="90" rx="180" ry="60" fill="#f0abfc" fill-opacity="0.22"/>
+      <ellipse class="ellipse-move ellipse3" cx="700" cy="320" rx="260" ry="100" fill="#60a5fa" fill-opacity="0.15"/>
+      <ellipse class="ellipse-move ellipse4" cx="1200" cy="340" rx="160" ry="60" fill="#fff" fill-opacity="0.13"/>
+    </svg>
+    <h1 class="display-3 fw-bold mb-3 animate-slidein" style="position:relative;z-index:2;">EcoDeli</h1>
+    <p class="lead fs-4 animate-fadein-delay" style="position:relative;z-index:2;">La livraison collaborative, écologique et solidaire</p>
+    <div class="mt-4 animate-fadein-delay2" style="position:relative;z-index:2;">
+      <a href="/register" class="btn btn-lg btn-light shadow">Rejoindre EcoDeli</a>
+    </div>
+    <!-- Vague plus haute et épaisse -->
+    <svg viewBox="0 0 1440 400" style="position:absolute; left:0; right:0; bottom:0; width:100%; height:200px; display:block; pointer-events:none;z-index:1;" preserveAspectRatio="none">
+      <path fill="#fff" fill-opacity="0.35" d="M0,250 Q360,400 720,250 T1440,250 V400H0Z" />
+    </svg>
+  </section>
+
+  <div class="container mt-5">
+    <!-- Présentation du concept -->
+    <section class="concept-section py-5 animate-fadein">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-md-6 mb-4 mb-md-0 animate-slidein">
+            <img src="/images/crowdshipping.png" alt="Crowdshipping" class="img-fluid rounded shadow-lg" style="max-width: 100%; background: #f8f8f8;" />
+          </div>
+          <div class="col-md-6 animate-fadein-delay">
+            <h2 class="fw-bold mb-3">Qu'est-ce qu'EcoDeli ?</h2>
+            <p class="fs-5">EcoDeli (ED) est une société proposant une solution de <b>crowdshipping</b>, un système de livraison qui fait intervenir les particuliers pour acheminer un colis à destination. Ceux-ci peuvent assurer aussi bien l'entièreté qu'une partie de la livraison.<br><br>
+            <b>Objectifs :</b> réduire l'impact de la livraison, favoriser le pouvoir d'achat et lutter contre l'isolement.<br><br>
+            <span class="text-success">✔️</span> Livraison collaborative<br>
+            <span class="text-success">✔️</span> Services à la personne<br>
+            <span class="text-success">✔️</span> Suivi en temps réel, assurance, partenaires locaux
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services principaux -->
+    <section class="services-section py-5 animate-fadein-delay2" style="background: #f8f8f8;">
+      <div class="container-fluid">
+        <h2 class="text-center fw-bold mb-5">Nos services</h2>
+        <div class="row g-4">
+          <div class="col-md-4 animate-slidein">
+            <div class="card h-100 shadow service-card border-0">
+              <div class="card-body text-center">
+                <i class="bi bi-box-seam display-4 text-success mb-3"></i>
+                <h5 class="card-title">Livraison collaborative</h5>
+                <p class="card-text">Mise en relation d'expéditeurs et de livreurs particuliers ou partenaires pour transporter vos colis partout en France.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 animate-slidein-delay">
+            <div class="card h-100 shadow service-card border-0">
+              <div class="card-body text-center">
+                <i class="bi bi-geo-alt display-4 text-primary mb-3"></i>
+                <h5 class="card-title">Suivi & Sécurité</h5>
+                <p class="card-text">Suivi des colis en temps réel, assurance, prise en charge intégrale ou partielle du trajet, livraison à domicile ou en point relais.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 animate-slidein-delay2">
+            <div class="card h-100 shadow service-card border-0">
+              <div class="card-body text-center">
+                <i class="bi bi-people-fill display-4 text-warning mb-3"></i>
+                <h5 class="card-title">Services à la personne</h5>
+                <p class="card-text">Transport de personnes, courses, petits travaux, garde d'animaux, achats à l'étranger, et plus encore grâce à la communauté EcoDeli.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pourquoi EcoDeli ? -->
+    <section class="py-5 animate-fadein">
+      <div class="container-fluid">
+        <h2 class="text-center fw-bold mb-4">Pourquoi choisir EcoDeli ?</h2>
+        <div class="row g-4 justify-content-center">
+          <div class="col-md-3 animate-slidein">
+            <div class="advantage-box text-center p-4 rounded shadow-sm bg-white">
+              <i class="bi bi-leaf display-5 text-success mb-2"></i>
+              <h6 class="fw-bold">Écologique</h6>
+              <p class="mb-0">Réduction de l'empreinte carbone grâce à l'optimisation des trajets et à la mutualisation des livraisons.</p>
+            </div>
+          </div>
+          <div class="col-md-3 animate-slidein-delay">
+            <div class="advantage-box text-center p-4 rounded shadow-sm bg-white">
+              <i class="bi bi-currency-euro display-5 text-primary mb-2"></i>
+              <h6 class="fw-bold">Économique</h6>
+              <p class="mb-0">Favorise le pouvoir d'achat, permet de rentabiliser ses trajets et de faire des économies sur les livraisons.</p>
+            </div>
+          </div>
+          <div class="col-md-3 animate-slidein-delay2">
+            <div class="advantage-box text-center p-4 rounded shadow-sm bg-white">
+              <i class="bi bi-people display-5 text-warning mb-2"></i>
+              <h6 class="fw-bold">Solidaire</h6>
+              <p class="mb-0">Lutte contre l'isolement, favorise l'entraide et la création de liens entre particuliers et commerçants.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDER ANNONCES MAISON -->
+    <!-- SLIDER ANNONCES MAISON -->
+<section class="mb-5 animate-fadein-delay2">
+  <h2 class="mb-3">📦 Annonces récentes</h2>
+  <div id="customAnnoncesSlider" class="custom-slider">
+    <button class="slider-arrow left" id="annoncePrevBtn"><i class="bi bi-chevron-left"></i></button>
+    <div class="slider-track" id="annoncesTrack">
+      <% annonces.filter(a => a.statut === 'ouverte').forEach((a, i) => { %>
+        <div class="slider-item annonce-item" data-index="<%= i %>">
+          <div class="card text-center mx-auto" style="width: 100%; max-width: 400px;">
+            <% if (a.image) { %>
+              <img src="<%= 'http://localhost:3000' + a.image %>" alt="Image annonce" class="img-fluid rounded-top" style="max-height:220px;object-fit:cover;">
+            <% } else { %>
+              <img src="/images/no-image.png" alt="Image annonce" class="img-fluid rounded-top" style="max-height:220px;object-fit:cover;">
+            <% } %>
+            <div class="card-body">
+              <h5 class="card-title"><%= a.titre %></h5>
+              <p class="card-text"><%= a.description %></p>
+              <p class="text-muted">
+                <strong>Départ :</strong> <%= a.depart %> &nbsp;&nbsp;
+                <strong>Arrivée :</strong> <%= a.arrivee %><br>
+                <strong>Date :</strong> <%= a.date %>
+              </p>
+              <a href="/annonces/<%= a.id %>" class="btn btn-primary">Voir l'annonce</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <button class="slider-arrow right" id="annonceNextBtn"><i class="bi bi-chevron-right"></i></button>
+  </div>
+</section>
+
+
+    <!-- SLIDER AVIS MAISON -->
+    <section class="mb-5 animate-fadein">
+      <h2 class="mb-3">🗣️ Ce que disent nos utilisateurs</h2>
+      <div id="customAvisSlider" class="custom-slider">
+        <button class="slider-arrow left" id="avisPrevBtn"><i class="bi bi-chevron-left"></i></button>
+        <div class="slider-track" id="avisTrack">
+          <% avis.forEach((avis, i) => { %>
+            <div class="slider-item avis-item" data-index="<%= i %>">
+              <div class="card mx-auto text-center" style="width: 100%; max-width: 400px;">
+                <div class="card-body">
+                  <blockquote class="blockquote mb-0">
+                    <p>"<%= avis.texte %>"</p>
+                    <footer class="blockquote-footer mt-2"><%= avis.nom %></footer>
+                  </blockquote>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+        <button class="slider-arrow right" id="avisNextBtn"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </section>
+  </div>
+</div>

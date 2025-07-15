@@ -1,0 +1,93 @@
+<nav class="navbar navbar-expand-lg navbar-dark eco-navbar shadow-sm py-2" style="margin-bottom:0;">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+      <img src="/images/navbar_logo.png" alt="EcoDeli logo" style="height:42px; width:auto; border-radius:0.5rem; box-shadow:0 2px 8px rgba(194, 255, 177, 0.08); background:#ffffff09; padding:2px;">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto text-center" id="navbarLinks">
+        <!-- Liens dynamiques JS -->
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Modal de connexion caché par défaut -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4 animate-fadein">
+      <div class="modal-header border-0">
+        <h2 class="modal-title w-100 text-center text-white" id="loginModalLabel">Connexion</h2>
+      </div>
+      <div class="modal-body">
+        <form id="loginForm">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+        </form>
+        <div class="mt-3 text-center">
+          <a href="/register" class="text-white-50">Pas encore de compte ? S'inscrire</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function updateNavbar() {
+  const links = document.getElementById('navbarLinks');
+  links.innerHTML = '';
+  links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/annonces">Annonces</a></li>';
+
+  fetch('http://localhost:3000/api/users/me', {
+    credentials: 'include'
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log('Utilisateur connecté :', data); // 🔍 AJOUTE ÇA
+    if (data.user) {
+      if (data.user.type === 'livreur') {
+        links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/mes-livraisons">Mes Livraisons</a></li>';
+      }
+      links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/mes-annonces">Mes Annonces</a></li>';
+      links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/account">Mon Compte</a></li>';
+      links.innerHTML += '<li class="nav-item"><a class="nav-link" href="#" id="logoutBtn">Se déconnecter</a></li>';
+    } else {
+      links.innerHTML += '<li class="nav-item"><a class="nav-link" href="#" id="openLoginModal">Se connecter</a></li>';
+      links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/register">S\'inscrire</a></li>';
+    }
+  })
+  .catch(err => {
+    console.error('Erreur lors de la vérification de l\'authentification:', err);
+    links.innerHTML += '<li class="nav-item"><a class="nav-link" href="#" id="openLoginModal">Se connecter</a></li>';
+    links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/register">S\'inscrire</a></li>';
+  });
+}
+
+
+document.addEventListener('DOMContentLoaded', updateNavbar);
+document.addEventListener('click', function(e) {
+  if (e.target && e.target.id === 'logoutBtn') {
+    fetch('http://localhost:3000/api/users/logout', {
+      method: 'POST',
+      credentials: 'include'
+    }).then(() => {
+      updateNavbar();  // Met à jour la navbar après la déconnexion
+      window.location.href = '/';
+    });
+  }
+  if (e.target && e.target.id === 'openLoginModal') {
+    const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+    modal.show();
+    document.body.classList.add('modal-open');
+  }
+});
+
+</script>
+  
