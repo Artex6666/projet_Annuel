@@ -131,9 +131,17 @@
 <script>
 import axios from "axios";
 
+<<<<<<< HEAD
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+=======
+// Configuration globale d'axios
+axios.defaults.withCredentials = true;
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+// Création d'une instance axios avec la configuration de base
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 const api = axios.create({
   baseURL: 'http://localhost:3000',
   withCredentials: true,
@@ -148,7 +156,12 @@ export default {
   name: "UserManagement",
   data() {
     return {
+<<<<<<< HEAD
       allUsers: [],
+=======
+      pendingUsers: [],
+      validatedUsers: [],
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
       dropdownOpen: null,
       selectedUserDocs: null,
       searchTerm: "",
@@ -159,6 +172,7 @@ export default {
   },
   computed: {
     filteredPendingUsers() {
+<<<<<<< HEAD
       return this.applySearch(this.allUsers.filter(user => !user.is_validated));
     },
     filteredValidatedUsers() {
@@ -178,6 +192,55 @@ export default {
 
     applySearch(users) {
       if (!this.searchTerm) return users;
+=======
+      return this.applySearch(this.pendingUsers);
+    },
+    filteredValidatedUsers() {
+      return this.applySearch(this.validatedUsers);
+    }
+  },
+  methods: {
+    async created() {
+      console.log("Component created - Fetching users...");
+      await this.fetchUsers();
+    },
+    async fetchUsers() {
+      console.log("fetchUsers called - Starting API request...");
+      try {
+        console.log("Making API request to /api/users/with-documents");
+        const usersWithDocsRes = await api.get("/api/users/with-documents");
+        console.log("API response received:", usersWithDocsRes);
+        
+        // Sépare les utilisateurs en attente et validés
+        this.pendingUsers = usersWithDocsRes.data.filter(user => !user.is_validated);
+        this.validatedUsers = usersWithDocsRes.data.filter(user => user.is_validated);
+        this.error = null;
+      } catch (err) {
+        console.log("API request failed:", err);
+        console.error('Erreur lors de la récupération des utilisateurs:', err);
+        if (err.response) {
+          console.error('Réponse du serveur:', err.response.data);
+          console.error('Status:', err.response.status);
+          console.error('Headers:', err.response.headers);
+          this.error = `Erreur ${err.response.status}: ${err.response.data.message || 'Erreur serveur'}`;
+          if (err.response.status === 401) {
+            window.location.href = 'http://localhost:4000/';
+          }
+        } else if (err.request) {
+          console.error('Pas de réponse reçue:', err.request);
+          this.error = 'Erreur de connexion au serveur';
+        } else {
+          console.error('Erreur de configuration:', err.message);
+          this.error = 'Erreur de configuration';
+        }
+      }
+    },
+    // Applique la recherche selon searchBy
+    applySearch(users) {
+      if (!this.searchTerm) {
+        return users;
+      }
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
       const term = this.searchTerm.toLowerCase();
       return users.filter(user => {
         switch (this.searchBy) {
@@ -187,7 +250,11 @@ export default {
             return user.email.toLowerCase().includes(term);
           case "type":
             return user.type.toLowerCase().includes(term);
+<<<<<<< HEAD
           default:
+=======
+          default: // "global"
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
             return (
               user.name.toLowerCase().includes(term) ||
               user.email.toLowerCase().includes(term) ||
@@ -201,25 +268,43 @@ export default {
       try {
         await api.post(`/api/users/${userId}/validate`);
         this.fetchUsers();
+<<<<<<< HEAD
+=======
+        this.error = null;
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
       } catch (err) {
         this.handleError(err);
       }
     },
+<<<<<<< HEAD
 
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     async deleteUser(userId) {
       if (!confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) return;
       try {
         await api.delete(`/api/users/${userId}`);
         this.fetchUsers();
+<<<<<<< HEAD
+=======
+        this.error = null;
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
       } catch (err) {
         this.handleError(err);
       }
     },
+<<<<<<< HEAD
 
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     async recheckUser(userId) {
       try {
         await api.post(`/api/users/${userId}/recheck`);
         this.fetchUsers();
+<<<<<<< HEAD
+=======
+        this.error = null;
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
       } catch (err) {
         this.handleError(err);
       }
@@ -231,16 +316,27 @@ export default {
           api.get(`/api/users/${userId}/documents`),
           api.get(`/api/users/${userId}`)
         ]);
+<<<<<<< HEAD
+=======
+        
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
         this.selectedUserDocs = { 
           userId,
           userName: userRes.data.name,
           docs: docsRes.data.docs 
         };
+<<<<<<< HEAD
+=======
+        this.error = null;
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
       } catch (err) {
         this.handleError(err);
       }
     },
+<<<<<<< HEAD
 
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     closeModal() {
       this.selectedUserDocs = null;
     },
@@ -252,12 +348,19 @@ export default {
     toggleDropdown(userId) {
       this.dropdownOpen = this.dropdownOpen === userId ? null : userId;
     },
+<<<<<<< HEAD
 
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     async updateRole(userId, role) {
       try {
         await api.post(`/api/users/${userId}/role`, { role });
         this.fetchUsers();
         this.dropdownOpen = null;
+<<<<<<< HEAD
+=======
+        this.error = null;
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
       } catch (err) {
         this.handleError(err);
       }
@@ -266,7 +369,10 @@ export default {
     toggleFilterDropdown() {
       this.filterDropdownOpen = !this.filterDropdownOpen;
     },
+<<<<<<< HEAD
 
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     setSearchBy(mode) {
       this.searchBy = mode;
       this.filterDropdownOpen = false;
@@ -282,6 +388,10 @@ export default {
       }
     },
 
+<<<<<<< HEAD
+=======
+    // Couleurs pour les rôles
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     getRoleClass(role) {
       switch (role) {
         case 'membre': return 'role-green';
@@ -290,7 +400,10 @@ export default {
         default: return 'role-green';
       }
     },
+<<<<<<< HEAD
 
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     getRoleLabel(role) {
       switch (role) {
         case 'membre': return 'Membre';
@@ -300,6 +413,7 @@ export default {
       }
     },
 
+<<<<<<< HEAD
     handleError(err) {
       console.error("Erreur :", err);
       if (err.response) {
@@ -312,6 +426,21 @@ export default {
         this.error = "Erreur de connexion au serveur";
       } else {
         this.error = "Erreur de configuration";
+=======
+    // Méthode utilitaire pour gérer les erreurs
+    handleError(err) {
+      console.error('Erreur:', err);
+      if (err.response) {
+        this.error = `Erreur ${err.response.status}: ${err.response.data.message || 'Erreur serveur'}`;
+        if (err.response.status === 401) {
+          alert('Session expirée. Veuillez vous reconnecter.');
+          window.location.href = 'http://localhost:4000/';
+        }
+      } else if (err.request) {
+        this.error = 'Erreur de connexion au serveur';
+      } else {
+        this.error = 'Erreur de configuration';
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
       }
     }
   },
@@ -321,7 +450,10 @@ export default {
 };
 </script>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 <style scoped>
 /* CONTENEUR GÉNÉRAL */
 .user-management {

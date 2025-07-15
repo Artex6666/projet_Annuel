@@ -23,6 +23,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+<<<<<<< HEAD
 // ✅ NOUVELLE ROUTE
 router.get('/', jwtAuth, roleAuth, UserController.getAllUsers);
 
@@ -36,6 +37,20 @@ router.get('/me', jwtAuth, (req, res) => {
 });
 
 // Authentification
+=======
+router.get('/with-documents', jwtAuth, roleAuth, UserController.getUsersWithDocuments);
+
+router.get('/pending', jwtAuth, roleAuth, UserController.getPendingUsers);
+
+router.get('/validated', jwtAuth, roleAuth, UserController.getValidatedUsers);
+
+router.get('/me', jwtAuth, (req, res) => {
+  const { id, name, email, role } = req.user;
+  res.json({ user: { id, name, email, role } });
+});
+
+// Routes d'authentification
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 router.post('/login', UserController.login);
 router.post('/logout', (req, res) => {
   res.clearCookie('token', {
@@ -46,6 +61,7 @@ router.post('/logout', (req, res) => {
   res.json({ message: 'Déconnecté avec succès' });
 });
 
+<<<<<<< HEAD
 // Utilisateurs
 router.get('/:id', jwtAuth, roleAuth, UserController.getUser);
 router.post('/', UserController.createUser);
@@ -56,6 +72,23 @@ router.post('/:id/role', jwtAuth, roleAuth, UserController.updateUserRole);
 
 // Documents
 router.get('/:id/documents', UserController.getUserDocuments);
+=======
+// Routes avec paramètres
+router.get('/:id', jwtAuth, roleAuth, UserController.getUser);
+
+router.post('/', UserController.createUser);
+
+router.post('/:id/validate', jwtAuth, roleAuth, UserController.validateUser);
+
+router.delete('/:id', jwtAuth, roleAuth, UserController.deleteUser);
+
+router.post('/:id/recheck', jwtAuth, roleAuth, UserController.recheckUser);
+
+router.post('/:id/role', jwtAuth, roleAuth, UserController.updateUserRole);
+
+router.get('/:id/documents', UserController.getUserDocuments);
+
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 router.post('/:id/documents', jwtAuth, upload.single('document'), UserController.uploadDocument);
 
 module.exports = router;

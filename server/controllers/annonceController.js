@@ -2,6 +2,10 @@ const AnnonceModel = require('../models/annonceModel');
 const path = require('path');
 const fs = require('fs');
 
+<<<<<<< HEAD
+=======
+// Liste des types d'annonces disponibles
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 const TYPES_ANNONCES = [
   "Colis",
   "Service à la personne",
@@ -14,8 +18,15 @@ const TYPES_ANNONCES = [
 
 const canModifyAnnonce = (user, annonce) => {
   if (!user || !annonce) return false;
+<<<<<<< HEAD
   const isAuthor = user.id === annonce.user_id;
   const hasRole = user.role === 'administrateur' || user.role === 'moderateur';
+=======
+    const isAuthor = user.id === annonce.user_id;
+  
+  const hasRole = user.role === 'administrateur' || user.role === 'moderateur';
+  
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
   return isAuthor || hasRole;
 };
 
@@ -27,7 +38,11 @@ const AnnonceController = {
   createAnnonce: (req, res, next) => {
     const user_id = req.user.id;
     const { titre, description, depart, arrivee, date, type, remuneration } = req.body;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     if (!titre || !description || !depart || !arrivee || !date || !type || !remuneration) {
       return res.status(400).json({ error: 'Tous les champs sont obligatoires' });
     }
@@ -36,15 +51,25 @@ const AnnonceController = {
       return res.status(400).json({ error: 'Image obligatoire' });
     }
 
+<<<<<<< HEAD
     if (!TYPES_ANNONCES.includes(type)) {
       return res.status(400).json({
+=======
+    // Validation du type d'annonce
+    if (!TYPES_ANNONCES.includes(type)) {
+      return res.status(400).json({ 
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
         error: "Type d'annonce invalide",
         message: "Le type d'annonce doit être l'un des suivants : " + TYPES_ANNONCES.join(", ")
       });
     }
 
     const image = `/uploads/annonces/${user_id}/${req.file.filename}`;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     AnnonceModel.createAnnonce(
       { user_id, titre, description, depart, arrivee, date, type, remuneration, image },
       (err, annonce) => {
@@ -83,8 +108,19 @@ const AnnonceController = {
     const user = req.user;
 
     AnnonceModel.getAnnonceById(id, (err, annonce) => {
+<<<<<<< HEAD
       if (err) return next(err);
       if (!annonce) return res.status(404).json({ error: 'Annonce non trouvée' });
+=======
+      if (err) {
+        console.error('Erreur lors de la récupération de l\'annonce:', err);
+        return next(err);
+      }
+      
+      if (!annonce) {
+        return res.status(404).json({ error: 'Annonce non trouvée' });
+      }
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 
       if (!canModifyAnnonce(user, annonce)) {
         return res.status(403).json({ 
@@ -100,7 +136,11 @@ const AnnonceController = {
           const oldImagePath = path.join(__dirname, '../..', annonce.image);
           fs.unlink(oldImagePath, (err) => {
             if (err && err.code !== 'ENOENT') {
+<<<<<<< HEAD
               console.error('Erreur suppression image :', err);
+=======
+              console.error('Erreur lors de la suppression de l\'ancienne image:', err);
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
             }
           });
         }
@@ -115,12 +155,23 @@ const AnnonceController = {
         date: date || annonce.date,
         type: type || annonce.type,
         remuneration: remuneration || annonce.remuneration,
+<<<<<<< HEAD
         image,
+=======
+        image: image,
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
         statut: statut || annonce.statut
       };
 
       AnnonceModel.updateAnnonce(id, updateData, (err2, updatedAnnonce) => {
+<<<<<<< HEAD
         if (err2) return next(err2);
+=======
+        if (err2) {
+          console.error('Erreur lors de la mise à jour de l\'annonce:', err2);
+          return next(err2);
+        }
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
         res.json(updatedAnnonce);
       });
     });
@@ -131,9 +182,21 @@ const AnnonceController = {
     const user = req.user;
 
     AnnonceModel.getAnnonceById(id, (err, annonce) => {
+<<<<<<< HEAD
       if (err) return next(err);
       if (!annonce) return res.status(404).json({ error: 'Annonce non trouvée' });
 
+=======
+      if (err) {
+        console.error('Erreur lors de la récupération de l\'annonce:', err);
+        return next(err);
+      }
+
+      if (!annonce) {
+        return res.status(404).json({ error: 'Annonce non trouvée' });
+      }
+      
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
       if (!canModifyAnnonce(user, annonce)) {
         return res.status(403).json({ 
           error: 'Non autorisé. Seul le créateur, un modérateur ou un administrateur peut supprimer cette annonce.' 
@@ -144,12 +207,17 @@ const AnnonceController = {
         const imagePath = path.join(__dirname, '../..', annonce.image);
         fs.unlink(imagePath, (err) => {
           if (err && err.code !== 'ENOENT') {
+<<<<<<< HEAD
             console.error('Erreur suppression image :', err);
+=======
+            console.error('Erreur lors de la suppression de l\'image:', err);
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
           }
         });
       }
 
       AnnonceModel.deleteAnnonce(id, (err2) => {
+<<<<<<< HEAD
         if (err2) return next(err2);
         res.json({ message: 'Annonce supprimée avec succès' });
       });
@@ -166,3 +234,16 @@ const AnnonceController = {
 };
 
 module.exports = AnnonceController;
+=======
+        if (err2) {
+          console.error('Erreur lors de la suppression de l\'annonce:', err2);
+          return next(err2);
+        }
+        res.json({ message: 'Annonce supprimée avec succès' });
+      });
+    });
+  }
+};
+
+module.exports = AnnonceController; 
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a

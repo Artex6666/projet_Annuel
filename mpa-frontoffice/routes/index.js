@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+<<<<<<< HEAD
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const bodyParser = require('body-parser');
 
@@ -7,6 +8,9 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 // Accueil
+=======
+
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 router.get('/', async (req, res) => {
   try {
     const apiRes = await fetch('http://localhost:3000/annonces');
@@ -19,6 +23,7 @@ router.get('/', async (req, res) => {
       { nom: 'Emma T.', texte: 'Première expérience, tout était simple et sécurisé.' },
       { nom: 'Pauline R.', texte: "J'ai pu envoyer un colis à ma sœur sans me ruiner, merci !" }
     ];
+<<<<<<< HEAD
     res.render('accueil', { title: 'Accueil', annonces, avis });
   } catch (err) {
     res.render('accueil', { title: 'Accueil', annonces: [], avis: [] });
@@ -32,10 +37,35 @@ router.get('/register', (req, res) => res.render('index', { title: 'Inscription'
 router.get('/account', (req, res) => res.render('account', { title: 'Mon Compte' }));
 
 // Déconnexion
+=======
+    res.render('accueil', {
+      title: 'Accueil',
+      annonces,
+      avis
+    });
+  } catch (err) {
+    res.render('accueil', {
+      title: 'Accueil',
+      annonces: [],
+      avis: []
+    });
+  }
+});
+
+router.get('/register', (req, res) => {
+  res.render('index', { title: 'Inscription' });
+});
+
+router.get('/account', (req, res) => {
+  res.render('account', { title: 'Mon Compte' });
+});
+
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 router.get('/logout', (req, res) => {
   res.send(`<script>localStorage.removeItem('token');localStorage.removeItem('user');window.location.href='/'</script>`);
 });
 
+<<<<<<< HEAD
 // Mes annonces
 router.get('/mes-annonces', (req, res) => res.render('mes-annonces', { title: 'Mes Annonces' }));
 
@@ -104,6 +134,10 @@ router.post('/livraison/:id/livrer', async (req, res) => {
     console.error('Erreur de livraison :', err);
     res.redirect('/mes-livraisons');
   }
+=======
+router.get('/mes-annonces', (req, res) => {
+  res.render('mes-annonces', { title: 'Mes Annonces' });
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 });
 
 module.exports = router;

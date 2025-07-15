@@ -107,6 +107,7 @@
     </section>
 
     <!-- SLIDER ANNONCES MAISON -->
+<<<<<<< HEAD
     <!-- SLIDER ANNONCES MAISON -->
 <section class="mb-5 animate-fadein-delay2">
   <h2 class="mb-3">📦 Annonces récentes</h2>
@@ -139,6 +140,38 @@
   </div>
 </section>
 
+=======
+    <section class="mb-5 animate-fadein-delay2">
+      <h2 class="mb-3">📦 Annonces récentes</h2>
+      <div id="customAnnoncesSlider" class="custom-slider">
+        <button class="slider-arrow left" id="annoncePrevBtn"><i class="bi bi-chevron-left"></i></button>
+        <div class="slider-track" id="annoncesTrack">
+          <% annonces.forEach((a, i) => { %>
+            <div class="slider-item annonce-item" data-index="<%= i %>">
+              <div class="card text-center mx-auto" style="width: 100%; max-width: 400px;">
+                <% if (a.image) { %>
+                  <img src="<%= 'http://localhost:3000' + a.image %>" alt="Image annonce" class="img-fluid rounded-top" style="max-height:220px;object-fit:cover;">
+                <% } else { %>
+                  <img src="/images/no-image.png" alt="Image annonce" class="img-fluid rounded-top" style="max-height:220px;object-fit:cover;">
+                <% } %>
+                <div class="card-body">
+                  <h5 class="card-title"><%= a.titre %></h5>
+                  <p class="card-text"><%= a.description %></p>
+                  <p class="text-muted">
+                    <strong>Départ :</strong> <%= a.depart %> &nbsp;&nbsp;
+                    <strong>Arrivée :</strong> <%= a.arrivee %><br>
+                    <strong>Date :</strong> <%= a.date %>
+                  </p>
+                  <a href="/annonce/<%= a.id %>" class="btn btn-primary">Voir l'annonce</a>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+        <button class="slider-arrow right" id="annonceNextBtn"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </section>
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 
     <!-- SLIDER AVIS MAISON -->
     <section class="mb-5 animate-fadein">

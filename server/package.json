@@ -17,10 +17,16 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+<<<<<<< HEAD
     "multer": "^2.0.1",
     "pg": "^8.14.1",
     "sqlite3": "^5.1.7",
     "swagger": "^0.0.1",
+=======
+    "pg": "^8.14.1",
+    "sqlite3": "^5.1.7",
+    "swagger": "^0.7.5",
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     "swagger-ui-express": "^5.0.1"
   }
 }

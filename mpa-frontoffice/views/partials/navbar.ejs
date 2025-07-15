@@ -44,17 +44,25 @@ function updateNavbar() {
   const links = document.getElementById('navbarLinks');
   links.innerHTML = '';
   links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/annonces">Annonces</a></li>';
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
   fetch('http://localhost:3000/api/users/me', {
     credentials: 'include'
   })
   .then(res => res.json())
   .then(data => {
+<<<<<<< HEAD
     console.log('Utilisateur connecté :', data); // 🔍 AJOUTE ÇA
     if (data.user) {
       if (data.user.type === 'livreur') {
         links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/mes-livraisons">Mes Livraisons</a></li>';
       }
+=======
+    if (data.user) {
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
       links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/mes-annonces">Mes Annonces</a></li>';
       links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/account">Mon Compte</a></li>';
       links.innerHTML += '<li class="nav-item"><a class="nav-link" href="#" id="logoutBtn">Se déconnecter</a></li>';
@@ -65,12 +73,19 @@ function updateNavbar() {
   })
   .catch(err => {
     console.error('Erreur lors de la vérification de l\'authentification:', err);
+<<<<<<< HEAD
+=======
+    // En cas d'erreur, on affiche les liens de connexion/inscription
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     links.innerHTML += '<li class="nav-item"><a class="nav-link" href="#" id="openLoginModal">Se connecter</a></li>';
     links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/register">S\'inscrire</a></li>';
   });
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 document.addEventListener('DOMContentLoaded', updateNavbar);
 document.addEventListener('click', function(e) {
   if (e.target && e.target.id === 'logoutBtn') {

@@ -1,11 +1,17 @@
 const db = require('./db');
 
 const AnnonceModel = {
+<<<<<<< HEAD
   // ✅ Création d’une annonce
   createAnnonce: (annonce, callback) => {
     const { user_id, titre, description, depart, arrivee, date, type, remuneration, image } = annonce;
     const now = new Date().toISOString();
 
+=======
+  createAnnonce: (annonce, callback) => {
+    const { user_id, titre, description, depart, arrivee, date, type, remuneration, image } = annonce;
+    const now = new Date().toISOString();
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     db.run(
       `INSERT INTO annonces (
         user_id, 
@@ -29,7 +35,10 @@ const AnnonceModel = {
     );
   },
 
+<<<<<<< HEAD
   // ✅ Toutes les annonces par utilisateur
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
   getAnnoncesByUser: (user_id, callback) => {
     db.all(
       `SELECT a.*, u.name as user_name 
@@ -42,7 +51,10 @@ const AnnonceModel = {
     );
   },
 
+<<<<<<< HEAD
   // ✅ Toutes les annonces
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
   getAllAnnonces: (callback) => {
     db.all(
       `SELECT a.*, u.name as user_name 
@@ -53,7 +65,10 @@ const AnnonceModel = {
     );
   },
 
+<<<<<<< HEAD
   // ✅ Une annonce par ID
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
   getAnnonceById: (id, callback) => {
     db.get(
       `SELECT a.*, u.name as user_name 
@@ -65,11 +80,17 @@ const AnnonceModel = {
     );
   },
 
+<<<<<<< HEAD
   // ✅ Mise à jour
   updateAnnonce: (id, annonce, callback) => {
     const { titre, description, depart, arrivee, date, type, remuneration, image, statut } = annonce;
     const now = new Date().toISOString();
 
+=======
+  updateAnnonce: (id, annonce, callback) => {
+    const { titre, description, depart, arrivee, date, type, remuneration, image, statut } = annonce;
+    const now = new Date().toISOString();
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     db.run(
       `UPDATE annonces SET 
         titre = ?, 
@@ -91,6 +112,7 @@ const AnnonceModel = {
     );
   },
 
+<<<<<<< HEAD
   // ✅ Suppression
   deleteAnnonce: (id, callback) => {
     db.run("DELETE FROM annonces WHERE id = ?", [id], callback);
@@ -112,3 +134,11 @@ const AnnonceModel = {
 };
 
 module.exports = AnnonceModel;
+=======
+  deleteAnnonce: (id, callback) => {
+    db.run("DELETE FROM annonces WHERE id = ?", [id], callback);
+  }
+};
+
+module.exports = AnnonceModel; 
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a

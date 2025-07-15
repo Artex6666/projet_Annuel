@@ -47,6 +47,7 @@ db.serialize(() => {
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
   )`);
+<<<<<<< HEAD
 
     db.run(`CREATE TABLE IF NOT EXISTS livraisons (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,6 +61,8 @@ db.serialize(() => {
     FOREIGN KEY(livreur_id) REFERENCES users(id)
   )`);
 
+=======
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
 });
 
 module.exports = db;

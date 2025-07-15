@@ -8,7 +8,11 @@ const fs = require('fs');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+<<<<<<< HEAD
     const userId = req.user.id;
+=======
+    const userId = req.user.id; // JWT
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
     const dir = path.join(__dirname, '../../uploads/annonces', String(userId));
     fs.mkdirSync(dir, { recursive: true });
     cb(null, dir);
@@ -22,6 +26,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+<<<<<<< HEAD
 // ✅ Routes d'annonces
 router.post('/', jwtAuth, upload.single('image'), annonceController.createAnnonce);
 router.get('/', annonceController.getAllAnnonces);
@@ -36,3 +41,14 @@ router.put('/:id', jwtAuth, upload.single('image'), annonceController.updateAnno
 router.delete('/:id', jwtAuth, annonceController.deleteAnnonce);
 
 module.exports = router;
+=======
+router.post('/', jwtAuth, upload.single('image'), annonceController.createAnnonce);
+router.get('/', annonceController.getAllAnnonces);
+router.get('/mes', jwtAuth, annonceController.getAnnoncesByUser);
+router.get('/:id', annonceController.getAnnonceById);
+router.put('/:id', jwtAuth, upload.single('image'), annonceController.updateAnnonce);
+router.delete('/:id', jwtAuth, annonceController.deleteAnnonce);
+router.get('/types', annonceController.getTypesAnnonces);
+
+module.exports = router; 
+>>>>>>> c827518a763d41e5a870ee35132d41d3a024090a
