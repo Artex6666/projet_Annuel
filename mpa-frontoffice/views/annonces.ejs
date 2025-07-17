@@ -1,0 +1,167 @@
+<div class="container py-5">
+  <h2 class="mb-5 text-center fw-bold display-5">Toutes les annonces</h2>
+  <form id="annonceFilters" class="row g-3 mb-4 justify-content-center">
+    <div class="col-md-3">
+      <label for="filterDate" class="form-label">Date</label>
+      <input type="date" class="form-control" id="filterDate">
+    </div>
+    <div class="col-md-2">
+      <label for="filterMinRem" class="form-label">Rémunération min (€)</label>
+      <input type="number" class="form-control" id="filterMinRem" min="0" step="0.01">
+    </div>
+    <div class="col-md-2">
+      <label for="filterMaxRem" class="form-label">Rémunération max (€)</label>
+      <input type="number" class="form-control" id="filterMaxRem" min="0" step="0.01">
+    </div>
+    <div class="col-md-3">
+      <label for="filterType" class="form-label">Type</label>
+      <select class="form-control" id="filterType">
+        <option value="">Tous</option>
+        <option value="Colis">Colis</option>
+        <option value="Service à la personne">Service à la personne</option>
+        <option value="Transport de personne">Transport de personne</option>
+        <option value="Courses">Courses</option>
+        <option value="Achat à l'étranger">Achat à l'étranger</option>
+        <option value="Garde d'animaux">Garde d'animaux</option>
+        <option value="Petits travaux">Petits travaux</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label for="sortRemuneration" class="form-label">Trier par rémunération</label>
+      <select class="form-control" id="sortRemuneration">
+        <option value="">Aucun tri</option>
+        <option value="asc">Croissant (€)</option>
+        <option value="desc">Décroissant (€)</option>
+      </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+      <button type="reset" class="btn btn-outline-secondary w-100">Réinitialiser</button>
+    </div>
+  </form>
+  <div class="row g-4" id="annoncesList">
+    <% for(let i = 0; i < annonces.length; i++) { %>
+      <% const annonce = annonces[i]; %>
+      <div class="col-12 col-md-6 col-lg-4 annonce-item">
+        <div class="card h-100 shadow border-0">
+          <img 
+            src="<%= annonce.image ? 'http://localhost:3000' + annonce.image : '/images/no-image.png' %>" 
+            alt="Image annonce" 
+            class="card-img-top"
+            style="height: 200px; object-fit: cover;"
+          >
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-box-seam text-success me-2"></i>
+              <%= annonce.titre %>
+            </h5>
+            <p class="card-text"><%= annonce.description %></p>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <i class="bi bi-geo-alt text-primary"></i>
+                <strong>Départ :</strong> <%= annonce.depart %>
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-flag text-warning"></i>
+                <strong>Arrivée :</strong> <%= annonce.arrivee %>
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-calendar-event text-info"></i>
+                <strong>Date :</strong> <%= annonce.date %>
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-cash-coin text-success"></i>
+                <strong>Rémunération :</strong> <%= annonce.remuneration %> €
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-tag text-info"></i>
+                <strong>Type :</strong> <%= annonce.type %>
+              </li>
+            </ul>
+            <a href="/annonces/<%= annonce.id %>" class="btn btn-outline-primary w-100">
+              Voir l'annonce
+            </a>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+<style>
+.card {
+  transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const filterDate = document.getElementById('filterDate');
+  const filterMinRem = document.getElementById('filterMinRem');
+  const filterMaxRem = document.getElementById('filterMaxRem');
+  const filterType = document.getElementById('filterType');
+  const sortRemuneration = document.getElementById('sortRemuneration');
+  const form = document.getElementById('annonceFilters');
+  const annoncesList = document.getElementById('annoncesList');
+  let annonceItems = Array.from(document.querySelectorAll('.annonce-item'));
+
+  function getRemuneration(item) {
+    const rem = item.querySelector('[data-remuneration]')?.dataset.remuneration;
+    return parseFloat(rem) || 0;
+  }
+
+  function applyFiltersAndSort() {
+    const date = filterDate.value;
+    const minRem = parseFloat(filterMinRem.value) || 0;
+    const maxRem = parseFloat(filterMaxRem.value) || Infinity;
+    const type = filterType.value;
+    const sort = sortRemuneration.value;
+
+    // Filtrage
+    annonceItems.forEach(item => {
+      const aDate = item.querySelector('[data-date]')?.dataset.date;
+      const aRem = parseFloat(item.querySelector('[data-remuneration]')?.dataset.remuneration) || 0;
+      const aType = item.querySelector('[data-type]')?.dataset.type;
+
+      let show = true;
+      if (date && aDate !== date) show = false;
+      if (aRem < minRem) show = false;
+      if (aRem > maxRem) show = false;
+      if (type && aType !== type) show = false;
+
+      item.style.display = show ? '' : 'none';
+    });
+
+    // Tri
+    if (sort) {
+      const visibles = annonceItems.filter(item => item.style.display !== 'none');
+      visibles.sort((a, b) => {
+        const remA = getRemuneration(a);
+        const remB = getRemuneration(b);
+        return sort === 'asc' ? remA - remB : remB - remA;
+      });
+      // Réordonner dans le DOM
+      visibles.forEach(item => annoncesList.appendChild(item));
+    }
+  }
+
+  [filterDate, filterMinRem, filterMaxRem, filterType, sortRemuneration].forEach(input => {
+    if (input) input.addEventListener('input', applyFiltersAndSort);
+  });
+
+  if (form) {
+    form.addEventListener('reset', () => setTimeout(applyFiltersAndSort, 10));
+  }
+
+  // Ajout des data-* pour le tri/filtre si manquant
+  annonceItems.forEach(item => {
+    const rem = item.querySelector('.card-body ul li:nth-child(4)');
+    const date = item.querySelector('.card-body ul li:nth-child(3)');
+    const type = item.querySelector('.card-body ul li:nth-child(5)');
+    if (rem) rem.setAttribute('data-remuneration', rem.textContent.match(/([\d\.]+)/) ? rem.textContent.match(/([\d\.]+)/)[1] : '0');
+    if (date) date.setAttribute('data-date', date.textContent.replace(/.*: /, ''));
+    if (type) type.setAttribute('data-type', type.textContent.replace(/.*: /, ''));
+  });
+});
+</script>

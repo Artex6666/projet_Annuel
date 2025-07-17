@@ -1,0 +1,43 @@
+<div class="container py-5">
+  <h2 class="mb-5 text-center fw-bold display-5">Mon Compte</h2>
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-lg border-0 mb-4 animate-fadein" style="border-radius:1.2rem;">
+        <div class="card-body text-center">
+          <div id="userInfo"></div>
+        </div>
+      </div>
+      <div id="becomeLivreurSection" class="text-center" style="display:none;">
+        <button class="btn btn-warning mb-3 px-4 py-2 fw-bold animate-fadein" id="showDocFormBtn"><i class="bi bi-truck me-2"></i>Devenir livreur</button>
+        <form id="docUploadForm" class="p-4 bg-light rounded shadow-sm animate-fadein" style="display:none; max-width:500px; margin:auto;" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="document" class="form-label">Document d'identité</label>
+            <input type="file" class="form-control" id="document" name="document" required accept="application/pdf,image/jpeg,image/png,image/gif,image/webp">
+            <small class="form-text text-muted">Formats acceptés : PDF, JPG, PNG, GIF, WEBP</small>
+          </div>
+          <div class="mb-3">
+            <label for="document_name" class="form-label">Type de document</label>
+            <select class="form-control" id="document_name" name="document_name" required>
+              <option value="" disabled selected>Choisir un type de document</option>
+              <option value="Carte d'identité">Carte d'identité</option>
+              <option value="Permis de conduire">Permis de conduire</option>
+              <option value="Passeport">Passeport</option>
+              <option value="Justificatif de domicile">Justificatif de domicile</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Envoyer</button>
+          <div id="docUploadMsg" class="mt-2"></div>
+        </form>
+      </div>
+      <div id="userDocs" class="mt-5"></div>
+    </div>
+  </div>
+</div>
+<style>
+.animate-fadein { animation: fadein 1.2s; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+#becomeLivreurSection .btn-warning { background: linear-gradient(90deg,#f7b731,#f5cd79); border: none; color: #222; }
+#becomeLivreurSection .btn-warning:hover { background: linear-gradient(90deg,#f5cd79,#f7b731); color: #111; }
+#docUploadForm { border: 1px solid #eee; }
+</style>
+<script src="/js/script.js"></script> 

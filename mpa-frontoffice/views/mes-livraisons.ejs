@@ -1,0 +1,468 @@
+<div class="container py-5">
+  <h2 class="mb-4 fw-bold text-center">📦 Mes livraisons</h2>
+
+  <% 
+    const livraisonsEnCours = livraisons.filter(l => l.statut === 'en_attente');
+    const livraisonsPassees = livraisons.filter(l => l.statut === 'livree');
+  %>
+
+  <!-- Livraisons en cours -->
+  <div class="section-wrapper mb-5">
+    <h3 class="section-title mb-4">
+      <i class="bi bi-clock-history text-warning"></i> 
+      Livraisons en cours 
+      <span class="badge bg-warning text-dark ms-2"><%= livraisonsEnCours.length %></span>
+    </h3>
+    
+    <% if (livraisonsEnCours.length === 0) { %>
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Aucune livraison en cours pour le moment.
+      </div>
+    <% } else { %>
+      <div class="table-responsive">
+        <table class="table table-striped align-middle shadow-sm">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Titre</th>
+              <th>Votre trajet</th>
+              <th>Progression</th>
+              <th>Gains</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% livraisonsEnCours.forEach(function(livraison, i) { %>
+              <tr>
+                <td><%= i + 1 %></td>
+                <td><%= livraison.titre %></td>
+                <td>
+                  <small class="text-muted">De:</small> <%= livraison.depart_livraison || livraison.depart %><br>
+                  <small class="text-muted">À:</small> <%= livraison.arrivee_livraison || livraison.arrivee %>
+                </td>
+                <td>
+                  <div class="progress mb-1" style="height: 15px;">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" data-progress="<%= livraison.progress_percentage || 0 %>">
+                      <small>0%</small>
+                    </div>
+                  </div>
+                  <small class="text-muted">Livraison partielle</small>
+                </td>
+                <td>
+                  <div class="text-center">
+                    <span class="badge bg-success fs-6" data-remuneration=<%= livraison.remuneration_calculated ||0 %>data-progress=<%=livraison.progress_percentage || 0 %>">
+        0                   </span>
+                    <br><small class="text-muted">sur <%= (livraison.remuneration_calculated || 0).toFixed(2) %> €</small>
+                  </div>
+                </td>
+                <td data-date="<%= livraison.date %>"><%= livraison.date %></td>
+                <td><%= livraison.type %></td>
+                <td>
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-success" data-livraison-id="<%= livraison.id %>" onclick="markDelivered(this.dataset.livraisonId)">
+                      <i class="bi bi-check2-circle"></i> Marquer livrée
+                    </button>
+                    <a href="/livraison/<%= livraison.id %>" class="btn btn-sm btn-outline-primary">
+                      <i class="bi bi-gear"></i> Gérer
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Livraisons passées -->
+  <div class="section-wrapper">
+    <h3 class="section-title mb-4">
+      <i class="bi bi-check-circle text-success"></i> 
+      Livraisons passées 
+      <span class="badge bg-success ms-2"><%= livraisonsPassees.length %></span>
+    </h3>
+    
+    <% if (livraisonsPassees.length === 0) { %>
+      <div class="alert alert-secondary">
+        <i class="bi bi-info-circle"></i> Aucune livraison terminée pour le moment.
+      </div>
+    <% } else { %>
+      <div class="table-responsive">
+        <table class="table table-striped align-middle shadow-sm">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Titre</th>
+              <th>Votre trajet</th>
+              <th>Progression</th>
+              <th>Gains obtenus</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% livraisonsPassees.forEach(function(livraison, i) { %>
+              <tr class="completed-delivery">
+                <td><%= i + 1 %></td>
+                <td><%= livraison.titre %></td>
+                <td>
+                  <small class="text-muted">De:</small> <%= livraison.depart_livraison || livraison.depart %><br>
+                  <small class="text-muted">À:</small> <%= livraison.arrivee_livraison || livraison.arrivee %>
+                </td>
+                <td>
+                  <div class="progress mb-1" style="height: 15px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%" data-progress="<%= livraison.progress_percentage || 0 %>">
+                      <small>0%</small>
+                    </div>
+                  </div>
+                  <small class="text-success">Livraison terminée</small>
+                </td>
+                <td>
+                  <div class="text-center">
+                    <span class="badge bg-success fs-6" data-remuneration="<%= livraison.remuneration || 0 %>" data-progress="<%= livraison.progress_percentage || 0 %>">
+                      0 €
+                    </span>
+                    <br><small class="text-muted">sur <%= livraison.remuneration %> €</small>
+                  </div>
+                </td>
+                <td data-date="<%= livraison.date %>"><%= livraison.date %></td>
+                <td><%= livraison.type %></td>
+                <td>
+                  <div class="d-flex gap-2">
+                    <i class="bi bi-check2-all text-success fs-4"></i>
+                    <a href="/livraison/<%= livraison.id %>" class="btn btn-sm btn-outline-info">
+                      <i class="bi bi-eye"></i> Voir détails
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+// Mettre à jour les barres de progression au chargement de la page
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Chargement de la page mes-livraisons');
+  
+  const progressBars = document.querySelectorAll('.progress-bar[data-progress]');
+  const earningsBadges = document.querySelectorAll('span[data-remuneration]');
+  
+  console.log('Nombre de barres de progression trouvées:', progressBars.length);
+  
+  progressBars.forEach(bar => {
+    const progress = parseFloat(bar.dataset.progress) || 0;
+    const roundedProgress = Math.round(progress);
+    
+    console.log('Mise à jour barre de progression:', progress, '%');
+    
+    // Mettre à jour la largeur
+    bar.style.width = progress + '%';
+    
+    // Mettre à jour le texte
+    const textElement = bar.querySelector('small');
+    if (textElement) {
+      textElement.textContent = roundedProgress + '%';
+    }
+    
+    // Mettre à jour la couleur selon le pourcentage
+    bar.className = 'progress-bar';
+    if (progress >= 75) {
+      bar.classList.add('bg-success');
+    } else if (progress >= 50) {
+      bar.classList.add('bg-warning');
+    } else if (progress >= 25) {
+      bar.classList.add('bg-info');
+    } else if (progress > 0) {
+      bar.classList.add('bg-danger');
+    } else {
+      bar.classList.add('bg-warning');
+    }
+    
+    // Mettre à jour le texte descriptif selon le statut de la livraison
+    const parentTd = bar.closest('td');
+    const descriptionElement = parentTd.querySelector('.text-muted');
+    if (descriptionElement) {
+      // Vérifier si c'est une livraison terminée (dans la section "Livraisons passées")
+      const isCompletedDelivery = bar.closest('tr').classList.contains('completed-delivery');
+      
+      if (isCompletedDelivery) {
+        descriptionElement.textContent = 'Livraison terminée';
+        descriptionElement.className = 'text-success';
+      } else {
+        // Pour les livraisons en cours, afficher selon la progression
+        if (progress >= 100) {
+          descriptionElement.textContent = 'Livraison complète';
+        } else if (progress > 0) {
+          descriptionElement.textContent = 'Livraison partielle';
+        } else {
+          descriptionElement.textContent = 'En attente';
+        }
+        descriptionElement.className = 'text-muted';
+      }
+    }
+  });
+  
+  // Mettre à jour les gains
+  earningsBadges.forEach(badge => {
+    const remuneration = parseFloat(badge.dataset.remuneration) || 0;
+    const progress = parseFloat(badge.dataset.progress) || 0;
+    const earnings = (remuneration * progress / 100).toFixed(2);
+    
+    badge.textContent = earnings + ' €';
+    
+    // Animation d'apparition
+    badge.style.opacity = '0';
+    badge.style.transform = 'scale(0.8)';
+    badge.style.transition = 'all 0.3s ease';
+    
+    setTimeout(() => {
+      badge.style.opacity = '1';
+      badge.style.transform = 'scale(1)';
+    }, 100);
+  });
+  
+  // Ajouter des animations au survol des lignes
+  const tableRows = document.querySelectorAll('tbody tr');
+  tableRows.forEach(row => {
+    row.addEventListener('mouseenter', function() {
+      this.style.transform = 'scale(1.02)';
+      this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+      this.style.transition = 'all 0.3s ease';
+    });
+    
+    row.addEventListener('mouseleave', function() {
+      this.style.transform = 'scale(1)';
+      this.style.boxShadow = 'none';
+    });
+  });
+  
+  // Animation des boutons
+  const buttons = document.querySelectorAll('.btn');
+  buttons.forEach(button => {
+    button.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-2px)';
+      this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.15)';
+    });
+    
+    button.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+      this.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+    });
+  });
+});
+
+async function markDelivered(livraisonId) {
+  if (!confirm('Êtes-vous sûr de vouloir marquer cette livraison comme terminée ?')) {
+    return;
+  }
+  
+  // Animation de chargement
+  const button = document.querySelector(`[data-livraison-id="${livraisonId}"]`);
+  const originalText = button.innerHTML;
+  button.innerHTML = '<i class="bi bi-hourglass-split"></i> Traitement...';
+  button.disabled = true;
+  
+  try {
+    const response = await fetch(`http://localhost:3000/api/livraisons/${livraisonId}/livrer`, {
+      method: 'POST',
+      credentials: 'include'
+    });
+    
+    if (response.ok) {
+      // Animation de succès
+      button.innerHTML = '<i class="bi bi-check-circle"></i> Terminé !';
+      button.classList.remove('btn-outline-success');
+      button.classList.add('btn-success');
+      
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } else {
+      const error = await response.json();
+      alert('Erreur: ' + (error.error || 'Impossible de marquer la livraison'));
+      button.innerHTML = originalText;
+      button.disabled = false;
+    }
+  } catch (error) {
+    console.error('Erreur:', error);
+    alert('Erreur réseau lors du marquage de la livraison');
+    button.innerHTML = originalText;
+    button.disabled = false;
+  }
+}
+</script>
+
+<style>
+.table {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.table thead th {
+  background: #e3f2fd;
+  color: #1565c0;
+  font-weight: 600;
+  border: none;
+  padding: 15px;
+}
+
+.table tbody tr {
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.table tbody tr:hover {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.table tbody td {
+  padding: 15px;
+  vertical-align: middle;
+  border-top: 1px solid #dee2e6;
+}
+
+.progress {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress-bar {
+  border-radius: 20px;
+  transition: width 0.8s ease, background-color 0.3s ease;
+}
+
+.badge {
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-weight: 500;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn {
+  border-radius: 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+}
+
+.animate-fadein {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slidein {
+  animation: slideIn 0.8s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.container {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+h2 {
+  position: relative;
+  display: inline-block;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #2196f3;
+  border-radius: 2px;
+}
+
+.alert {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.d-flex.gap-2 {
+  gap: 8px !important;
+}
+
+.text-center span {
+  display: inline-block;
+}
+
+.section-wrapper {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.section-title {
+  color: #495057;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.completed-delivery {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  opacity: 0.9;
+}
+
+.completed-delivery:hover {
+  opacity: 1;
+  background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    border-radius: 15px;
+  }
+  
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .section-wrapper {
+    padding: 20px;
+  }
+}
+</style>

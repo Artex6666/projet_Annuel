@@ -1,0 +1,178 @@
+<div class="container py-5">
+  <% if (!annonce) { %>
+    <div class="alert alert-danger text-center">
+      <h4><i class="bi bi-exclamation-triangle"></i> <%= error || 'Annonce introuvable.' %></h4>
+      <a href="/annonces" class="btn btn-outline-primary mt-3">
+        <i class="bi bi-arrow-left"></i> Retour aux annonces
+      </a>
+    </div>
+  <% } else { %>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow border-0">
+          <div class="row g-0">
+            <div class="col-md-5">
+              <img src="<%= annonce.image ? 'http://localhost:3000' + annonce.image : '/images/no-image.png' %>" alt="Image annonce" class="img-fluid rounded-start" style="object-fit:cover; height:100%">
+            </div>
+            <div class="col-md-7">
+              <div class="card-body d-flex flex-column">
+                <h3 class="card-title fw-bold mb-3">
+                  <i class="bi bi-box-seam text-success me-2"></i><%= annonce.titre %>
+                </h3>
+                <p class="card-text mb-3"><%= annonce.description %></p>
+                <ul class="list-unstyled mb-3">
+                  <li><i class="bi bi-geo-alt text-primary"></i> <strong>Départ :</strong> <%= annonce.depart %></li>
+                  <li><i class="bi bi-flag text-warning"></i> <strong>Arrivée :</strong> <%= annonce.arrivee %></li>
+                  <li><i class="bi bi-calendar-event text-info"></i> <strong>Date :</strong> <span data-date="<%= annonce.date %>"><%= annonce.date %></span></li>
+                  <li><i class="bi bi-cash-coin text-success"></i> <strong>Rémunération :</strong> <%= annonce.remuneration %> €</li>
+                  <li><i class="bi bi-tag text-info"></i> <strong>Type :</strong> <%= annonce.type %></li>
+                </ul>
+                
+                <% if (user && user.id === annonce.user_id) { %>
+                  <button type="button" class="btn btn-warning w-100 mt-3 edit-btn-single" 
+                          data-annonce-id="<%= annonce.id %>" 
+                          onclick="editAnnonce('<%= annonce.id %>')">
+                    <i class="bi bi-pencil-square me-2"></i>
+                    Modifier cette annonce
+                  </button>
+                <% } else if (user && user.type === 'livreur') { %>
+                  <button type="button" class="btn btn-success w-100 mt-3" 
+                          data-annonce-id="<%= annonce.id %>" 
+                          data-depart="<%= annonce.depart %>" 
+                          data-arrivee="<%= annonce.arrivee %>" 
+                          data-livraison-partielle="<%= annonce.livraison_partielle || 0 %>"
+                          onclick="openDeliveryModal(this)">
+                      <i class="bi bi-truck"></i> Prendre en charge cette livraison
+                    </button>
+                <% } %>
+                <a href="/annonces" class="btn btn-outline-primary mt-4">
+                  <i class="bi bi-arrow-left"></i> Retour aux annonces
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<!-- Modal de prise en charge de livraison -->
+<div class="modal fade" id="deliveryModal" tabindex="-1" aria-labelledby="deliveryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deliveryModalLabel">
+          <i class="bi bi-truck"></i> Prise en charge de livraison
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <form id="deliveryForm">
+          <input type="hidden" id="annonceId" name="annonceId">
+          
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> <strong>Trajet complet :</strong>
+            <div id="fullRoute" class="mt-2"></div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="departLivraison" class="form-label">
+                  <i class="bi bi-geo-alt"></i> Départ de votre livraison
+                </label>
+                <input type="text" class="form-control" id="departLivraison" name="departLivraison" required 
+                       placeholder="Adresse de départ">
+                <small class="form-text text-muted">
+                  Où récupérez-vous le colis ?
+                </small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="arriveeLivraison" class="form-label">
+                  <i class="bi bi-flag"></i> Arrivée de votre livraison
+                </label>
+                <input type="text" class="form-control" id="arriveeLivraison" name="arriveeLivraison" required 
+                       placeholder="Adresse d'arrivée">
+                <small class="form-text text-muted">
+                  Où déposez-vous le colis ?
+                </small>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Carte de visualisation -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-map"></i> Visualisation du trajet
+            </label>
+            <div id="deliveryMap" style="height: 300px; border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa;">
+              <div class="d-flex align-items-center justify-content-center h-100">
+                <div class="text-center">
+                  <i class="bi bi-map text-muted" style="font-size: 3rem;"></i>
+                  <p class="text-muted mt-2">La carte apparaîtra ici une fois les adresses saisies</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Jauge de progression -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-speedometer2"></i> Progression de la livraison
+            </label>
+            <div class="progress mb-2" style="height: 20px;">
+              <div class="progress-bar bg-success" role="progressbar" id="progressBar" style="width: 0%">
+                <span id="progressText">0%</span>
+              </div>
+            </div>
+            <small class="text-muted">Pourcentage du trajet total que vous effectuez</small>
+          </div>
+          
+          <div id="deliveryMsg" class="mt-2"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-success" onclick="submitDelivery()">
+          <i class="bi bi-check-circle"></i> Confirmer la prise en charge
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/js/delivery.js"></script>
+
+<style>
+.edit-btn-single {
+  background: linear-gradient(135deg, #ff9966, #ff5e62);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 15px rgba(255, 94, 98, 0.2);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.edit-btn-single:hover {
+  background: linear-gradient(135deg, #ff5e62, #ff9966);
+  box-shadow: 0 6px 20px rgba(255, 94, 98, 0.25);
+  color: #fff;
+}
+
+.edit-btn-single:active {
+  box-shadow: 0 4px 12px rgba(255, 94, 98, 0.2);
+}
+</style>
+
+<script>
+function editAnnonce(annonceId) {
+  // Rediriger vers la page mes-annonces avec l'ID de l'annonce à modifier
+  window.location.href = `/mes-annonces?edit=${annonceId}`;
+}
+</script>

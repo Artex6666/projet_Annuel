@@ -1,0 +1,302 @@
+body {
+    background-color: #f9fafb;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  h1, h2 {
+    color: #343a40;
+  }
+  
+  .card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+  }
+  
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: #333;
+    border-radius: 50%;
+    padding: 10px;
+  }
+  
+  /* === SLIDER MAISON === */
+  .custom-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 320px;
+    overflow: hidden;
+    width: 100%;
+  }
+  .slider-track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.5s cubic-bezier(.4,2,.6,1);
+    gap: 24px;
+    overflow: visible;
+  }
+  .slider-track.animating {
+    width: calc(100% * 4 / 3);
+  }
+  .slider-item {
+    flex: 0 0 calc(33.333% - 24px);
+    max-width: calc(33.333% - 24px);
+    margin: 0;
+    opacity: 0.5;
+    filter: grayscale(0.5);
+    transition: all 0.4s cubic-bezier(.4,2,.6,1);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .slider-item.center {
+    opacity: 1;
+    filter: none;
+    pointer-events: auto;
+    z-index: 3;
+  }
+  .slider-item.side {
+    opacity: 0.8;
+    filter: grayscale(0.2);
+    z-index: 2;
+    pointer-events: auto;
+  }
+  .slider-arrow {
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 1.5rem;
+    color: #27ae60;
+    box-shadow: 0 2px 8px rgba(41,128,185,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+  .slider-arrow:hover { background: #eafaf1; }
+  @media (max-width: 991px) {
+    .slider-track { gap: 12px; }
+    .slider-item, .slider-item.center, .slider-item.side {
+      transform: scale(1) !important;
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+  @media (max-width: 600px), (orientation: portrait) {
+    .slider-item {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    .slider-track, .slider-track.animating {
+      width: 100%;
+    }
+    .slider-item { display: none !important; }
+    .slider-item.center { display: block !important; }
+    .slider-item.side { display: none !important; }
+    .custom-slider { min-height: 260px; }
+  }
+  
+  .hero-section {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    border-radius: 0;
+    min-height: 420px;
+    position: relative;
+    z-index: 1;
+    padding-top: 60px;
+  }
+  @media (max-width: 991px) {
+    .hero-section {
+      padding-top: 40px;
+      min-height: 320px;
+    }
+  }
+  @media (max-width: 767px) {
+    .hero-section {
+      padding-top: 20px;
+      min-height: 220px;
+    }
+    .display-3 { font-size: 2.2rem; }
+    .fs-4 { font-size: 1.1rem; }
+  }
+  .hero-shape {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    width: 100%; height: 120px;
+    z-index: 0;
+  }
+  .hero-section h1, .hero-section p, .hero-section .btn { position: relative; z-index: 2; }
+  .animate-fadein { animation: fadein 1.2s; }
+  .animate-fadein-delay { animation: fadein 1.2s 0.5s both; }
+  .animate-fadein-delay2 { animation: fadein 1.2s 1s both; }
+  .animate-slidein { animation: slidein 1.2s; }
+  .animate-slidein-delay { animation: slidein 1.2s 0.5s both; }
+  .animate-slidein-delay2 { animation: slidein 1.2s 1s both; }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slidein { from { opacity: 0; transform: translateY(40px);} to { opacity: 1; transform: none; } }
+  .service-card:hover { transform: translateY(-8px) scale(1.03); box-shadow: 0 8px 32px rgba(39,174,96,0.12); transition: 0.3s; }
+  .advantage-box { transition: box-shadow 0.3s; }
+  .advantage-box:hover { box-shadow: 0 8px 32px rgba(41,128,185,0.12); }
+  .slider-track.slide-left {
+    animation: slideLeft 0.5s cubic-bezier(.4,2,.6,1);
+  }
+  .slider-track.slide-right {
+    animation: slideRight 0.5s cubic-bezier(.4,2,.6,1);
+  }
+  @keyframes slideLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+  @keyframes slideRight {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+  }
+  .slider-item:hover {
+    box-shadow: 0 8px 32px rgba(36, 100, 143, 0.25), 0 2px 8px rgba(175, 241, 246, 0.1);
+    border: 2px solid #a3f7ff;
+    z-index: 10;
+    transition: box-shadow 0.3s, border 0.3s;
+  }
+  .slider-item:hover img {
+    transform: none !important;
+    transition: transform 0.3s;
+    z-index: 2;
+  }
+  .slider-item img {
+    transition: transform 0.3s;
+    border-radius: 0.75rem 0.75rem 0 0;
+    /* garde l'arrondi même en grossissant */
+  }
+  .hero-ellipses .ellipse-move {
+    transition: opacity 1.5s, transform 1.5s;
+    will-change: transform, opacity;
+  }
+  .ellipse1 {
+    animation: ellipseFloat1 22s linear infinite;
+  }
+  .ellipse2 {
+    animation: ellipseFloat2 28s linear infinite;
+  }
+  .ellipse3 {
+    animation: ellipseFloat3 32s linear infinite;
+  }
+  .ellipse4 {
+    animation: ellipseFloat4 26s linear infinite;
+  }
+  @keyframes ellipseFloat1 {
+    0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.18; }
+    50% { transform: translateY(30px) translateX(40px) scale(1.08) rotate(8deg); opacity: 0.22; }
+    100% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.18; }
+  }
+  @keyframes ellipseFloat2 {
+    0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.22; }
+    50% { transform: translateY(-36px) translateX(-30px) scale(1.04) rotate(-7deg); opacity: 0.28; }
+    100% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.22; }
+  }
+  @keyframes ellipseFloat3 {
+    0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.15; }
+    50% { transform: translateY(24px) translateX(60px) scale(1.12) rotate(12deg); opacity: 0.21; }
+    100% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.15; }
+  }
+  @keyframes ellipseFloat4 {
+    0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.13; }
+    50% { transform: translateY(-28px) translateX(30px) scale(1.09) rotate(-10deg); opacity: 0.19; }
+    100% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.13; }
+  }
+  
+  /* === NAVBAR ECODELI === */
+  .eco-navbar {
+    background: linear-gradient(90deg,#23272b 60%,#27ae60 100%) !important;
+    box-shadow: 0 4px 24px rgba(39,174,96,0.10);
+    position: relative;
+    z-index: 100;
+  }
+  .eco-navbar .navbar-brand span {
+    color: #27ae60 !important;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .eco-navbar .nav-link {
+    color: #fff !important;
+    font-size: 1.1rem;
+    margin: 0 0.5rem;
+    border-radius: 0.5rem;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+    position: relative;
+  }
+  .eco-navbar .nav-link:hover, .eco-navbar .nav-link.active {
+    background: rgba(39,174,96,0.13);
+    color: #27ae60 !important;
+    transform: translateY(-2px) scale(1.07);
+  }
+  .eco-navbar .navbar-toggler {
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+  .eco-navbar .navbar-toggler:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #27ae6033;
+  }
+  @media (max-width: 991px) {
+    .eco-navbar {
+    }
+    .eco-navbar .navbar-brand span { font-size: 1.1rem; }
+    .eco-navbar .navbar-collapse {
+      background: linear-gradient(90deg,#23272b 80%,#27ae60 100%) !important;
+      border-radius: 0 0 1.2rem 1.2rem;
+      box-shadow: 0 8px 32px rgba(39,174,96,0.10);
+      margin-top: 0.5rem;
+      padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+    }
+    .eco-navbar .nav-link {
+      margin: 0.5rem 0;
+      font-size: 1.15rem;
+      text-align: center;
+    }
+  }
+  @media (max-width: 600px) {
+    .eco-navbar {
+    }
+    .eco-navbar .navbar-brand img { height: 32px; }
+    .eco-navbar .navbar-brand span { font-size: 1rem; }
+  }
+  
+  /* Modal de connexion EcoDeli */
+  #loginModal .modal-content {
+    background: linear-gradient(162deg, #23272b 0%, #206e41 70%, #269861 100%);
+    color: #fff;
+    border-radius: 1.2rem;
+    box-shadow: 0 8px 32px rgba(39,174,96,0.18);
+  }
+  #loginModal .modal-header,
+  #loginModal .modal-body {
+    background: transparent;
+  }
+  /* Fond sombre derrière le modal Bootstrap */
+  .modal-backdrop.show {
+    opacity: 0.62 !important;
+    background: #181c1f !important;
+  }
+  
+  .slider-item:hover .card {
+    transform: scale(1.07);
+    transition: transform 0.3s;
+    will-change: transform;
+    z-index: 2;
+  }
+  .slider-item .card {
+    transition: transform 0.3s;
+    overflow: hidden;
+  }
+  
+  #customAnnoncesSlider {
+    padding: 24px 0;
+  }
+  
