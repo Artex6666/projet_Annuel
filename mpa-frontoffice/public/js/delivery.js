@@ -1,5 +1,4 @@
-// Système de livraison avancé avec modal, carte et validation
-// Namespace pour éviter les conflits avec script.js
+////////////////////// NAMESPACE & VARIABLES //////////////////////
 const DeliverySystem = {
   modal: null,
   map: null,
@@ -16,10 +15,9 @@ const DeliverySystem = {
   searchStates: new Map() // Pour gérer les états de recherche
 };
 
-// Ajout d'une variable globale pour la validité de la route
 DeliverySystem.lastRouteValid = false;
 
-// Initialisation du modal de livraison
+////////////////////// INITIALISATION MODAL //////////////////////
 document.addEventListener('DOMContentLoaded', function() {
   // Préchargement désactivé pour éviter les timeouts
   // preloadCommonAddresses();
@@ -47,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Précharger des adresses communes pour améliorer les performances
+////////////////////// OUTILS ADRESSE //////////////////////
 async function preloadCommonAddresses() {
   const commonAddresses = [
     'Paris',
@@ -56,7 +54,7 @@ async function preloadCommonAddresses() {
   
   for (const address of commonAddresses) {
     try {
-      const response = await fetch(`http://localhost:3000/annonces/geocode?q=${encodeURIComponent(address)}&countrycodes=fr&limit=3`);
+      const response = await fetch(`https://api.axia.quest/annonces/geocode?q=${encodeURIComponent(address)}&countrycodes=fr&limit=3`);
       const data = await response.json();
       
       if (data.length > 0) {
@@ -72,7 +70,6 @@ async function preloadCommonAddresses() {
   }
 }
 
-// Configuration d'une recherche d'adresse professionnelle
 function setupProfessionalAddressSearch(inputElement, fieldId) {
   let searchTimeout;
   let isSearching = false;
@@ -212,7 +209,6 @@ function setupProfessionalAddressSearch(inputElement, fieldId) {
   });
 }
 
-// Recherche dans le cache
 function searchInCache(query) {
   const normalizedQuery = query.toLowerCase().trim();
   const results = [];
@@ -227,7 +223,6 @@ function searchInCache(query) {
   return results.slice(0, 8);
 }
 
-// Recherche d'adresse professionnelle
 async function performProfessionalAddressSearch(address, inputElement, fieldId, loadingIndicator) {
   try {
     // Vérifier le cache d'abord
@@ -247,7 +242,7 @@ async function performProfessionalAddressSearch(address, inputElement, fieldId, 
     const normalizedAddress = normalizeAddressQuery(address);
     
     // Recherche prioritaire France
-    const frenchUrl = `http://localhost:3000/annonces/geocode?q=${encodeURIComponent(normalizedAddress)}&countrycodes=fr&limit=8`;
+    const frenchUrl = `https://api.axia.quest/annonces/geocode?q=${encodeURIComponent(normalizedAddress)}&countrycodes=fr&limit=8`;
     
     const frenchResponse = await fetch(frenchUrl, {
       signal: controller.signal
@@ -268,7 +263,7 @@ async function performProfessionalAddressSearch(address, inputElement, fieldId, 
       }));
     } else {
       // Essayer avec la requête originale si la normalisée ne donne rien
-      const originalUrl = `http://localhost:3000/annonces/geocode?q=${encodeURIComponent(address)}&countrycodes=fr&limit=5`;
+      const originalUrl = `https://api.axia.quest/annonces/geocode?q=${encodeURIComponent(address)}&countrycodes=fr&limit=5`;
       const originalResponse = await fetch(originalUrl, {
         signal: controller.signal
       });
@@ -286,7 +281,7 @@ async function performProfessionalAddressSearch(address, inputElement, fieldId, 
       
       // Si toujours pas de résultats, essayer Europe
       if (allResults.length === 0) {
-        const europeUrl = `http://localhost:3000/annonces/geocode?q=${encodeURIComponent(normalizedAddress)}&countrycodes=be,ch,lu,mc,ad,it,es,de,gb&limit=3`;
+        const europeUrl = `https://api.axia.quest/annonces/geocode?q=${encodeURIComponent(normalizedAddress)}&countrycodes=be,ch,lu,mc,ad,it,es,de,gb&limit=3`;
         const europeResponse = await fetch(europeUrl, {
           signal: controller.signal
         });
@@ -334,7 +329,6 @@ async function performProfessionalAddressSearch(address, inputElement, fieldId, 
   }
 }
 
-// Calculer la pertinence d'un résultat
 function calculateRelevance(query, displayName) {
   const queryLower = query.toLowerCase();
   const displayLower = displayName.toLowerCase();
@@ -366,7 +360,6 @@ function calculateRelevance(query, displayName) {
   return score;
 }
 
-// Normaliser une requête d'adresse
 function normalizeAddressQuery(query) {
   return query
     .toLowerCase()
@@ -393,17 +386,14 @@ function normalizeAddressQuery(query) {
     .trim();
 }
 
-// Afficher l'indicateur de chargement
 function showLoadingIndicator(indicator) {
   indicator.style.display = 'block';
 }
 
-// Cacher l'indicateur de chargement
 function hideLoadingIndicator(indicator) {
   indicator.style.display = 'none';
 }
 
-// Cacher les suggestions
 function hideSuggestions(inputElement) {
   const suggestions = inputElement.parentElement.querySelector('.delivery-address-suggestions');
   if (suggestions) {
@@ -411,7 +401,6 @@ function hideSuggestions(inputElement) {
   }
 }
 
-// Mettre à jour la sélection au clavier
 function updateSelection(items, selectedIndex) {
   items.forEach((item, index) => {
     if (index === selectedIndex) {
@@ -426,7 +415,6 @@ function updateSelection(items, selectedIndex) {
   });
 }
 
-// Fonction pour afficher les suggestions (améliorée)
 function displaySuggestions(data, inputElement) {
   // Supprimer les anciennes suggestions
   hideSuggestions(inputElement);
@@ -540,8 +528,7 @@ function displaySuggestions(data, inputElement) {
   suggestionsDiv.addEventListener('mousedown', handleSuggestionSelection);
 }
 
-// Debounce pour la mise à jour de la route
-let routeUpdateTimeout;
+////////////////////// MODAL LIVRAISON & CARTE //////////////////////
 function updateDeliveryRouteDebounced() {
   clearTimeout(routeUpdateTimeout);
   routeUpdateTimeout = setTimeout(() => {
@@ -549,7 +536,6 @@ function updateDeliveryRouteDebounced() {
   }, 2000); // Délai augmenté à 2 secondes
 }
 
-// Ouvrir le modal de livraison
 function openDeliveryModal(button) {
   const annonceId = button.dataset.annonceId;
   const depart = button.dataset.depart;
@@ -619,11 +605,7 @@ function openDeliveryModal(button) {
   modal.show();
 }
 
-// Fonction setupAddressAutocomplete supprimée - remplacée par setupProfessionalAddressSearch
-// Fonction showAddressSuggestions supprimée - remplacée par performProfessionalAddressSearch
-// Fonction displaySuggestions supprimée - remplacée par la version améliorée
-
-// Initialiser la carte de livraison
+////////////////////// INITIALISATION CARTE //////////////////////
 function initDeliveryMap() {
   const mapContainer = document.getElementById('deliveryMap');
   if (!mapContainer) return;
@@ -657,7 +639,6 @@ function initDeliveryMap() {
   }
 }
 
-// Initialiser la route originale sur la carte
 async function initOriginalRoute() {
   if (!DeliverySystem.currentAnnonce) return;
   
@@ -756,7 +737,6 @@ async function initOriginalRoute() {
   }
 }
 
-// Mettre à jour la route de livraison sur la carte
 async function updateDeliveryRoute() {
   if (!DeliverySystem.map || !DeliverySystem.currentAnnonce) return;
   
@@ -884,7 +864,6 @@ async function updateDeliveryRoute() {
   }
 }
 
-// Géocoder une adresse avec fallback vers le cache serveur
 async function geocodeAddressWithFallback(address) {
   try {
     // 1Essayer d'abord le cache côté client
@@ -901,7 +880,7 @@ async function geocodeAddressWithFallback(address) {
     }
     
     // 2. Essayer le cache côté serveur (plus fiable en cas de blocage Nominatim)
-    const response = await fetch(`http://localhost:3000/annonces/geocode?q=${encodeURIComponent(address)}&limit=1`);
+    const response = await fetch(`https://api.axia.quest/annonces/geocode?q=${encodeURIComponent(address)}&limit=1`);
     const data = await response.json();
     
     if (data.length > 0) {
@@ -919,7 +898,6 @@ async function geocodeAddressWithFallback(address) {
   }
 }
 
-// Géocoder une adresse
 async function geocodeAddress(address, existingCoords = null) {
   try {
     // Si on a déjà les coordonnées, les utiliser directement
@@ -944,7 +922,7 @@ async function geocodeAddress(address, existingCoords = null) {
       }
     }
     
-    const response = await fetch(`http://localhost:3000/annonces/geocode?q=${encodeURIComponent(address)}&limit=1`);
+    const response = await fetch(`https://api.axia.quest/annonces/geocode?q=${encodeURIComponent(address)}&limit=1`);
     const data = await response.json();
     
     if (data.length > 0) {
@@ -961,7 +939,6 @@ async function geocodeAddress(address, existingCoords = null) {
   }
 }
 
-// Valider que la route de livraison est cohérente
 function validateDeliveryRoute(originalStart, originalEnd, deliveryStart, deliveryEnd) {
   // Calculer les distances
   const totalDistance = getDistanceKm(originalStart.lat, originalStart.lng, originalEnd.lat, originalEnd.lng);
@@ -1002,7 +979,6 @@ function validateDeliveryRoute(originalStart, originalEnd, deliveryStart, delive
   return { valid: true };
 }
 
-// Calculer le pourcentage de progression de la route
 function calculateRouteProgress(originalStart, originalEnd, deliveryStart, deliveryEnd) {
   const totalDistance = getDistanceKm(originalStart.lat, originalStart.lng, originalEnd.lat, originalEnd.lng);
   
@@ -1026,7 +1002,6 @@ function calculateRouteProgress(originalStart, originalEnd, deliveryStart, deliv
   return Math.round(progress);
 }
 
-// Calculer la distance entre deux points en kilomètres
 function getDistanceKm(lat1, lon1, lat2, lon2) {
   const R = 6371; // Rayon de la Terre en km
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -1038,7 +1013,6 @@ function getDistanceKm(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-// Mettre à jour la barre de progression
 function updateProgressBar(percentage) {
   // Fonction pour essayer de mettre à jour plusieurs fois si nécessaire
   function tryUpdate(attempts = 0) {
@@ -1075,7 +1049,6 @@ function updateProgressBar(percentage) {
   tryUpdate();
 }
 
-// Afficher la route sur la carte
 function displayRouteOnMap(originalStart, originalEnd, deliveryStart, deliveryEnd) {
   if (!DeliverySystem.map) {
     return;
@@ -1150,7 +1123,6 @@ function displayRouteOnMap(originalStart, originalEnd, deliveryStart, deliveryEn
   }, 100);
 }
 
-// Effacer la route de la carte
 function clearMapRoute() {
   if (DeliverySystem.routeMarkers) {
     DeliverySystem.routeMarkers.forEach(marker => DeliverySystem.map.removeLayer(marker));
@@ -1163,7 +1135,6 @@ function clearMapRoute() {
   }
 }
 
-// Effacer seulement les éléments de livraison (garder la route originale)
 function clearDeliveryRoute() {
   if (DeliverySystem.deliveryMarkers) {
     DeliverySystem.deliveryMarkers.forEach(marker => {
@@ -1219,7 +1190,6 @@ async function initMap() {
   }
 }
 
-// Soumettre la livraison
 async function submitDelivery() {
   // Vérifier la validité de la route avant de soumettre
   if (!DeliverySystem.lastRouteValid) {
@@ -1296,7 +1266,7 @@ async function submitDelivery() {
     };
     
     // Envoyer la requête
-    const response = await fetch('http://localhost:3000/api/livraisons', {
+    const response = await fetch('https://api.axia.quest/api/livraisons', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

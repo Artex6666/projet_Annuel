@@ -1,38 +1,32 @@
+////////////////////// IMPORTS & MIDDLEWARES //////////////////////
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-
 const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-// Middleware pour vérifier l'authentification
+////////////////////// AUTHENTIFICATION //////////////////////
 const checkAuth = async (req, res, next) => {
   const token = req.cookies.token;
-  
-  // Vérifier si l'utilisateur est connecté
   if (!token) {
     return res.redirect('/');
   }
-  
   try {
-    // Vérifier la validité du token
-    const response = await axios.get('http://localhost:3000/api/users/me', {
-      headers: {
-        'Cookie': `token=${token}`
-      }
+    const cookieHeader = Object.entries(req.cookies)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('; ');
+    const response = await axios.get('https://api.axia.quest/api/users/me', {
+      headers: { 'Cookie': cookieHeader }
     });
-    
     if (response.status !== 200) {
       return res.redirect('/');
     }
-    
     const data = response.data;
     if (!data.user) {
       return res.redirect('/');
     }
-    
-    req.user = data.user; // Stocker les données de l'utilisateur dans req
+    req.user = data.user;
     next();
   } catch (err) {
     console.error('Erreur vérification authentification:', err.message);
@@ -40,10 +34,10 @@ const checkAuth = async (req, res, next) => {
   }
 };
 
-// Accueil
+////////////////////// ROUTES PUBLIQUES //////////////////////
 router.get('/', async (req, res) => {
   try {
-    const apiRes = await axios.get('http://localhost:3000/annonces');
+    const apiRes = await axios.get('https://api.axia.quest/annonces');
     const annonces = apiRes.data;
     const avis = [
       { nom: 'Sarah M.', texte: 'Service impeccable, rapide et très humain.' },
@@ -68,35 +62,28 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Inscription
 router.get('/register', (req, res) => {
-  res.render('index', { title: 'Inscription' });
+  res.render('inscription', { title: 'Inscription' });
 });
 
-// Mon compte
 router.get('/account', (req, res) => {
   res.render('account', { title: 'Mon Compte' });
 });
 
-// Déconnexion
 router.get('/logout', (req, res) => {
   res.send(`<script>localStorage.removeItem('token');localStorage.removeItem('user');window.location.href='/'</script>`);
 });
 
-// Annonces personnelles
+////////////////////// ROUTES PROTÉGÉES //////////////////////
 router.get('/mes-annonces', checkAuth, (req, res) => {
   res.render('mes-annonces', { title: 'Mes Annonces' });
 });
 
-// ✅ Mes livraisons
 router.get('/mes-livraisons', checkAuth, async (req, res) => {
   try {
-    const response = await axios.get('http://localhost:3000/api/livraisons/mes', {
-      headers: {
-        'Cookie': `token=${req.cookies.token}`
-      }
+    const response = await axios.get('https://api.axia.quest/api/livraisons/mes', {
+      headers: { 'Cookie': `token=${req.cookies.token}` }
     });
-
     const livraisons = response.data;
     res.render('mes-livraisons', { title: 'Mes Livraisons', livraisons });
   } catch (err) {
@@ -105,33 +92,20 @@ router.get('/mes-livraisons', checkAuth, async (req, res) => {
   }
 });
 
-// ✅ Page de livraison individuelle
 router.get('/livraison/:id', checkAuth, async (req, res) => {
   const livraisonId = req.params.id;
-
   try {
-    // Récupérer les informations de la livraison
-    const response = await axios.get(`http://localhost:3000/api/livraisons/${livraisonId}`, {
-      headers: {
-        'Cookie': `token=${req.cookies.token}`
-      }
+    const response = await axios.get(`https://api.axia.quest/api/livraisons/${livraisonId}`, {
+      headers: { 'Cookie': `token=${req.cookies.token}` }
     });
-
     if (response.status !== 200) {
       throw new Error('Livraison non trouvée');
     }
-
     const livraison = response.data;
-    
-    // Récupérer les informations utilisateur
-    const userResponse = await axios.get('http://localhost:3000/api/users/me', {
-      headers: {
-        'Cookie': `token=${req.cookies.token}`
-      }
+    const userResponse = await axios.get('https://api.axia.quest/api/users/me', {
+      headers: { 'Cookie': `token=${req.cookies.token}` }
     });
-    
     const userData = userResponse.data;
-    
     res.render('livraison', { 
       title: `Livraison - ${livraison.titre}`, 
       livraison,
@@ -146,25 +120,21 @@ router.get('/livraison/:id', checkAuth, async (req, res) => {
   }
 });
 
-// ✅ Prendre en charge une livraison (via formulaire)
 router.post('/livraisons/prendre', checkAuth, async (req, res) => {
   const annonceId = req.body.annonceId;
-
   try {
-    const apiRes = await axios.post('http://localhost:3000/api/livraisons', { annonce_id: annonceId }, {
+    const apiRes = await axios.post('https://api.axia.quest/api/livraisons', { annonce_id: annonceId }, {
       headers: {
         'Content-Type': 'application/json',
         'Cookie': `token=${req.cookies.token}`
       },
       withCredentials: true
     });
-
     if (apiRes.status !== 200) {
       const err = apiRes.data;
       console.error('Erreur API:', err);
       return res.redirect(`/annonces/${annonceId}`);
     }
-
     res.redirect('/mes-livraisons');
   } catch (err) {
     console.error("Erreur prise en charge:", err.message);
@@ -172,12 +142,10 @@ router.post('/livraisons/prendre', checkAuth, async (req, res) => {
   }
 });
 
-// ✅ Marquer une livraison comme livrée
 router.post('/livraison/:id/livrer', checkAuth, async (req, res) => {
   const id = req.params.id;
-
   try {
-    await axios.post(`http://localhost:3000/api/livraisons/${id}/livrer`, {}, {
+    await axios.post(`https://api.axia.quest/api/livraisons/${id}/livrer`, {}, {
       headers: {
         'Cookie': `token=${req.cookies.token}`,
         'Content-Type': 'application/json'
@@ -187,32 +155,6 @@ router.post('/livraison/:id/livrer', checkAuth, async (req, res) => {
   } catch (err) {
     console.error("Erreur de livraison :", err.message);
     res.redirect('/mes-livraisons');
-  }
-});
-
-// ✅ Prendre en charge une livraison (formulaire côté MPA)
-router.post('/livraisons/prendre', checkAuth, async (req, res) => {
-  const annonceId = req.body.annonceId;
-
-  try {
-    const response = await axios.post('http://localhost:3000/api/livraisons', { annonce_id: annonceId }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `token=${req.cookies.token}`
-      },
-      withCredentials: true
-    });
-
-    if (response.status !== 200) {
-      const err = response.data;
-      console.error('Erreur API :', err);
-      return res.redirect(`/annonces/${annonceId}`);
-    }
-
-    res.redirect('/mes-livraisons');
-  } catch (err) {
-    console.error('Erreur prise en charge :', err.message);
-    res.redirect(`/annonces/${annonceId}`);
   }
 });
 

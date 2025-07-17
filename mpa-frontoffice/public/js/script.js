@@ -1,6 +1,6 @@
+////////////////////// OUTILS ADRESSE //////////////////////
 console.log('Script chargé');
 
-// Fonction pour valider une adresse avec notre proxy
 async function validateAddress(address) {
   try {
     // Recherche prioritaire en France, puis Europe, puis monde
@@ -11,7 +11,7 @@ async function validateAddress(address) {
     ];
     
     for (const search of searches) {
-      const url = `http://localhost:3000/annonces/geocode?q=${encodeURIComponent(address)}&limit=1${search.countrycodes ? '&countrycodes=' + search.countrycodes : ''}`;
+      const url = `https://api.axia.quest/annonces/geocode?q=${encodeURIComponent(address)}&limit=1${search.countrycodes ? '&countrycodes=' + search.countrycodes : ''}`;
       const response = await fetch(url);
       const data = await response.json();
       if (data.length > 0) {
@@ -25,10 +25,8 @@ async function validateAddress(address) {
   }
 }
 
-// Cache pour les suggestions d'adresses
 const addressCache = new Map();
 
-// Fonction de normalisation d'adresse pour améliorer la recherche
 function normalizeAddressQuery(query) {
   return query
     .toLowerCase()
@@ -57,7 +55,6 @@ function normalizeAddressQuery(query) {
     .trim();
 }
 
-// Fonction pour formater proprement une adresse (numéro, rue, ville, code postal, pays)
 function formatAddressProfessional(item) {
   const parts = item.display_name.split(', ');
   const address = item.address || {};
@@ -93,7 +90,6 @@ function formatAddressProfessional(item) {
   return formatted || item.display_name.split(', ').slice(0, 2).join(', ');
 }
 
-// Fonction pour afficher les suggestions d'adresses
 async function showAddressSuggestions(address, inputElement) {
   if (address.length < 3) return; // Minimum 3 caractères pour éviter les recherches trop courtes
   
@@ -109,7 +105,7 @@ async function showAddressSuggestions(address, inputElement) {
   
   try {
     // Recherche prioritaire France avec requête normalisée
-    const frenchUrl = `http://localhost:3000/annonces/geocode?q=${encodeURIComponent(normalizedAddress)}&countrycodes=fr&limit=8`;
+    const frenchUrl = `https://api.axia.quest/annonces/geocode?q=${encodeURIComponent(normalizedAddress)}&countrycodes=fr&limit=8`;
     const frenchResponse = await fetch(frenchUrl);
     const frenchData = await frenchResponse.json();
     
@@ -122,7 +118,7 @@ async function showAddressSuggestions(address, inputElement) {
       }));
     } else {
       // Si pas de résultats avec la requête normalisée, essayer la requête originale
-      const originalUrl = `http://localhost:3000/annonces/geocode?q=${encodeURIComponent(address)}&countrycodes=fr&limit=5`;
+      const originalUrl = `https://api.axia.quest/annonces/geocode?q=${encodeURIComponent(address)}&countrycodes=fr&limit=5`;
       const originalResponse = await fetch(originalUrl);
       const originalData = await originalResponse.json();
       
@@ -133,7 +129,7 @@ async function showAddressSuggestions(address, inputElement) {
         }));
       } else {
         // Essayer Europe
-        const europeUrl = `http://localhost:3000/annonces/geocode?q=${encodeURIComponent(normalizedAddress)}&countrycodes=be,ch,lu,mc,ad,it,es,de,gb&limit=3`;
+        const europeUrl = `https://api.axia.quest/annonces/geocode?q=${encodeURIComponent(normalizedAddress)}&countrycodes=be,ch,lu,mc,ad,it,es,de,gb&limit=3`;
         const europeResponse = await fetch(europeUrl);
         const europeData = await europeResponse.json();
         
@@ -162,7 +158,6 @@ async function showAddressSuggestions(address, inputElement) {
   }
 }
 
-// Fonction pour formater une adresse (plus courte et lisible) - DEPRECATED
 function formatAddress(fullAddress) {
   // Séparer les éléments de l'adresse
   const parts = fullAddress.split(', ');
@@ -183,7 +178,6 @@ function formatAddress(fullAddress) {
   return parts.slice(0, 2).join(', ');
 }
 
-// Fonction pour afficher les suggestions
 function displaySuggestions(data, inputElement) {
   // Supprimer les anciennes suggestions
   const existingSuggestions = inputElement.parentElement.querySelector('.address-suggestions');
@@ -255,30 +249,13 @@ function displaySuggestions(data, inputElement) {
   }
 }
 
-// Ajout d'une fonction pour afficher un popup Bootstrap
-document.body.insertAdjacentHTML('beforeend', `
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title" id="errorModalLabel">Erreur</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="errorModalBody"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-      </div>
-    </div>
-  </div>
-</div>
-`);
+////////////////////// MODALES & NOTIFICATIONS //////////////////////
 function showErrorModal(message) {
   document.getElementById('errorModalBody').innerText = message;
   const modal = new bootstrap.Modal(document.getElementById('errorModal'));
   modal.show();
 }
 
-// Fonction pour afficher une notification de succès
 function showSuccessNotification(message) {
   // Supprimer les anciennes notifications
   const existingNotifications = document.querySelectorAll('.success-notification');
@@ -313,7 +290,8 @@ function showSuccessNotification(message) {
   }, 5000);
 }
 
-// Gestion de l'inscription
+////////////////////// FORMULAIRES //////////////////////
+// Inscription
 if (document.getElementById('registerForm')) {
   const emailInput = document.getElementById('email');
   if (emailInput) {
@@ -337,7 +315,7 @@ if (document.getElementById('registerForm')) {
       return;
     }
     try {
-      const res = await fetch('http://localhost:3000/api/users', {
+      const res = await fetch('https://api.axia.quest/api/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -345,7 +323,7 @@ if (document.getElementById('registerForm')) {
       });
       if (res.ok) {
         // Connexion automatique après inscription
-        const loginRes = await fetch('http://localhost:3000/api/users/login', {
+        const loginRes = await fetch('https://api.axia.quest/api/users/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -367,14 +345,14 @@ if (document.getElementById('registerForm')) {
   });
 }
 
-// Gestion de la connexion
+// Connexion
 if (document.getElementById('loginForm')) {
   document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const email = this.email.value;
     const password = this.password.value;
     try {
-      const res = await fetch('http://localhost:3000/api/users/login', {
+      const res = await fetch('https://api.axia.quest/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -393,9 +371,9 @@ if (document.getElementById('loginForm')) {
   });
 }
 
-// Vérification d'authentification pour les pages protégées
+// Authentification pages protégées
 if (window.location.pathname === '/mes-annonces') {
-  fetch('http://localhost:3000/api/users/me', {
+  fetch('https://api.axia.quest/api/users/me', {
     credentials: 'include'
   })
     .then(res => res.json())
@@ -411,9 +389,9 @@ if (window.location.pathname === '/mes-annonces') {
   });
 }
 
-// Affichage du compte et gestion "devenir livreur"
+// Compte utilisateur
 if (window.location.pathname === '/account') {
-  fetch('http://localhost:3000/api/users/me', {
+  fetch('https://api.axia.quest/api/users/me', {
     credentials: 'include'
   })
     .then(res => res.json())
@@ -440,7 +418,7 @@ if (window.location.pathname === '/account') {
           formData.append('document', this.document.files[0]);
           formData.append('document_name', this.document_name.value);
           try {
-            const res = await fetch(`http://localhost:3000/api/users/${user.id}/documents`, {
+            const res = await fetch(`https://api.axia.quest/api/users/${user.id}/documents`, {
               method: 'POST',
               credentials: 'include',
               body: formData
@@ -460,7 +438,7 @@ if (window.location.pathname === '/account') {
         });
       }
       // Affichage des documents déjà uploadés
-      fetch(`http://localhost:3000/api/users/${user.id}/documents`, {
+      fetch(`https://api.axia.quest/api/users/${user.id}/documents`, {
         credentials: 'include'
       })
         .then(res => res.json())
@@ -477,7 +455,7 @@ if (window.location.pathname === '/account') {
     });
 }
 
-// === Gestion des annonces utilisateur (version avec image et tarif, modal) ===
+////////////////////// ANNONCES UTILISATEUR //////////////////////
 let editingAnnonceId = null;
 let annonceModal;
 
@@ -497,7 +475,7 @@ if (openAnnonceModalBtn) {
 }
 
 function loadMesAnnonces() {
-  fetch('http://localhost:3000/annonces/mes', {
+  fetch('https://api.axia.quest/annonces/mes', {
     credentials: 'include'
   })
     .then(res => res.json())
@@ -513,7 +491,7 @@ function loadMesAnnonces() {
         `;
         return;
       }
-      const backendUrl = 'http://localhost:3000';
+      const backendUrl = 'https://api.axia.quest';
       annonces.forEach(a => {
         container.innerHTML += `
           <div class="card mb-3 position-relative">
@@ -576,10 +554,10 @@ if (annonceForm) {
     }
     
     annonceMsg.innerText = '';
-    let url = 'http://localhost:3000/annonces';
+    let url = 'https://api.axia.quest/annonces';
     let method = 'POST';
     if (editingAnnonceId) {
-      url = 'http://localhost:3000/annonces/' + editingAnnonceId;
+      url = 'https://api.axia.quest/annonces/' + editingAnnonceId;
       method = 'PUT';
       // Si pas de nouvelle image, ne pas rendre le champ obligatoire
       if (!annonceForm.image.value) {
@@ -634,7 +612,7 @@ if (annonceForm) {
 }
 
 window.editAnnonce = function(id) {
-  fetch('http://localhost:3000/annonces/' + id)
+  fetch('https://api.axia.quest/annonces/' + id)
     .then(res => res.json())
     .then(a => {
       editingAnnonceId = a.id;
@@ -662,7 +640,7 @@ window.editAnnonce = function(id) {
 
 window.deleteAnnonce = function(id) {
   if (!confirm('Supprimer cette annonce ?')) return;
-  fetch('http://localhost:3000/annonces/' + id, {
+  fetch('https://api.axia.quest/annonces/' + id, {
     method: 'DELETE',
     credentials: 'include'
   })
@@ -706,7 +684,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Charger les types d'annonces au chargement de la page
   const typeSelect = document.getElementById('type');
   if (typeSelect) {
-    fetch('http://localhost:3000/annonces/types')
+    fetch('https://api.axia.quest/annonces/types')
       .then(response => response.json())
       .then(data => {
         typeSelect.innerHTML = '<option value="" disabled selected>Choisir un type</option>';

@@ -13,14 +13,12 @@
     <div class="mt-4 animate-fadein-delay2" style="position:relative;z-index:2;">
       <a href="/register" class="btn btn-lg btn-light shadow">Rejoindre EcoDeli</a>
     </div>
-    <!-- Vague plus haute et épaisse -->
     <svg viewBox="0 0 1440 400" style="position:absolute; left:0; right:0; bottom:0; width:100%; height:200px; display:block; pointer-events:none;z-index:1;" preserveAspectRatio="none">
       <path fill="#fff" fill-opacity="0.35" d="M0,250 Q360,400 720,250 T1440,250 V400H0Z" />
     </svg>
   </section>
 
   <div class="container mt-5">
-    <!-- Présentation du concept -->
     <section class="concept-section py-5 animate-fadein">
       <div class="container-fluid">
         <div class="row align-items-center">
@@ -106,8 +104,7 @@
       </div>
     </section>
 
-    <!-- SLIDER ANNONCES MAISON -->
-    <!-- SLIDER ANNONCES MAISON -->
+
 <section class="mb-5 animate-fadein-delay2">
   <h2 class="mb-3">📦 Annonces récentes</h2>
   <div id="customAnnoncesSlider" class="custom-slider">
@@ -117,7 +114,7 @@
         <div class="slider-item annonce-item" data-index="<%= i %>">
           <div class="card text-center mx-auto" style="width: 100%; max-width: 400px;">
             <% if (a.image) { %>
-              <img src="<%= 'http://localhost:3000' + a.image %>" alt="Image annonce" class="img-fluid rounded-top" style="max-height:220px;object-fit:cover;">
+              <img src="<%= 'https://api.axia.quest' + a.image %>" alt="Image annonce" class="img-fluid rounded-top" style="max-height:220px;object-fit:cover;">
             <% } else { %>
               <img src="/images/no-image.png" alt="Image annonce" class="img-fluid rounded-top" style="max-height:220px;object-fit:cover;">
             <% } %>
@@ -140,7 +137,6 @@
 </section>
 
 
-    <!-- SLIDER AVIS MAISON -->
     <section class="mb-5 animate-fadein">
       <h2 class="mb-3">🗣️ Ce que disent nos utilisateurs</h2>
       <div id="customAvisSlider" class="custom-slider">

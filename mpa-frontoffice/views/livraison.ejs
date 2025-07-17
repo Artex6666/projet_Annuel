@@ -297,7 +297,7 @@ function initDeliveryMap() {
 
 async function geocodeAddress(address) {
   try {
-    const response = await fetch('http://localhost:3000/annonces/geocode?q=' + encodeURIComponent(address) + '&limit=1');
+    const response = await fetch('https://api.axia.quest/annonces/geocode?q=' + encodeURIComponent(address) + '&limit=1');
     const data = await response.json();
     
     if (data && data.length > 0) {
@@ -347,7 +347,7 @@ async function markDelivered(livraisonId) {
   }
   
   try {
-    const response = await fetch('http://localhost:3000/api/livraisons/' + livraisonId + '/livrer', {
+    const response = await fetch('https://api.axia.quest/api/livraisons/' + livraisonId + '/livrer', {
       method: 'POST',
       credentials: 'include'
     });

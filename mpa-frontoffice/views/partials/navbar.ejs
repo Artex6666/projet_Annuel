@@ -45,7 +45,7 @@ function updateNavbar() {
   links.innerHTML = '';
   links.innerHTML += '<li class="nav-item"><a class="nav-link" href="/annonces">Annonces</a></li>';
 
-  fetch('http://localhost:3000/api/users/me', {
+  fetch('https://api.axia.quest/api/users/me', {
     credentials: 'include'
   })
   .then(res => res.json())
@@ -74,11 +74,11 @@ function updateNavbar() {
 document.addEventListener('DOMContentLoaded', updateNavbar);
 document.addEventListener('click', function(e) {
   if (e.target && e.target.id === 'logoutBtn') {
-    fetch('http://localhost:3000/api/users/logout', {
+    fetch('https://api.axia.quest/api/users/logout', {
       method: 'POST',
       credentials: 'include'
     }).then(() => {
-      updateNavbar();  // Met à jour la navbar après la déconnexion
+      updateNavbar(); 
       window.location.href = '/';
     });
   }

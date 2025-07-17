@@ -45,7 +45,7 @@ export default {
   },
   async mounted() {
     try {
-      const res = await axios.get('http://localhost:3000/api/stats');
+      const res = await axios.get('https://api.axia.quest/api/stats');
       this.stats = res.data;
 
 

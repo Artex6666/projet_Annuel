@@ -135,7 +135,7 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://api.axia.quest',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -306,7 +306,7 @@ export default {
         this.error = `Erreur ${err.response.status}: ${err.response.data.message || 'Erreur serveur'}`;
         if (err.response.status === 401) {
           alert("Session expirée. Veuillez vous reconnecter.");
-          window.location.href = "http://localhost:4000/";
+          window.location.href = "https://axia.quest/";
         }
       } else if (err.request) {
         this.error = "Erreur de connexion au serveur";

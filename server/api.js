@@ -22,11 +22,31 @@ app.use(express.json());
 
 // CORS
 app.use(cors({
-  origin: ['http://localhost:8080', 'http://localhost:4000'],
+  origin: [
+    'http://localhost:8080',
+    'http://localhost:4000',
+    'https://axia.quest',
+    'https://www.axia.quest',
+    'https://admin.axia.quest',
+    'https://api.axia.quest'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN', 'X-Requested-With', 'Accept', 'Origin'],
   exposedHeaders: ['X-XSRF-TOKEN']
+}));
+
+// Gestion explicite des requêtes OPTIONS pour CORS
+app.options('*', cors({
+  origin: [
+    'http://localhost:8080',
+    'http://localhost:4000',
+    'https://axia.quest',
+    'https://www.axia.quest',
+    'https://admin.axia.quest',
+    'https://api.axia.quest'
+  ],
+  credentials: true
 }));
 
 // Static files

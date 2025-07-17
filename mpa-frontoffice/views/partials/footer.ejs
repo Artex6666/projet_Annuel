@@ -21,7 +21,7 @@
 <script>
 // Affichage du bouton admin si l'utilisateur est admin
 (function() {
-  fetch('http://localhost:3000/api/users/me', {
+  fetch('https://api.axia.quest/api/users/me', {
     credentials: 'include'
   })
   .then(res => res.json())
@@ -58,7 +58,7 @@
       };
 
       btn.onclick = function() {
-        window.location.href = 'http://localhost:8080/';
+        window.location.href = 'https://admin.axia.quest/';
       };
       document.body.appendChild(btn);
     }

@@ -1,0 +1,20 @@
+npm ERR! code ENOENT
+npm ERR! syscall open
+npm ERR! path /root/PA/package.json
+npm ERR! errno -2
+npm ERR! enoent ENOENT: no such file or directory, open '/root/PA/package.json'
+npm ERR! enoent This is related to npm not being able to find a file.
+npm ERR! enoent 
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /root/.npm/_logs/2025-07-17T20_35_11_643Z-debug-0.log
+npm ERR! code ENOENT
+npm ERR! syscall open
+npm ERR! path /root/PA/package.json
+npm ERR! errno -2
+npm ERR! enoent ENOENT: no such file or directory, open '/root/PA/package.json'
+npm ERR! enoent This is related to npm not being able to find a file.
+npm ERR! enoent 
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /root/.npm/_logs/2025-07-17T20_37_55_985Z-debug-0.log

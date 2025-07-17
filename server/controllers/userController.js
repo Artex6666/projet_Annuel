@@ -30,8 +30,9 @@ class UserController {
       // Définir les cookies
       res.cookie('token', token, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'lax'
+        secure: true, 
+        sameSite: 'None',
+        domain: '.axia.quest'
       });
 
       // Extraire nom et prénom du champ name
@@ -47,8 +48,9 @@ class UserController {
         type: user.type
       }), {
         httpOnly: false,
-        secure: false,
-        sameSite: 'lax'
+        secure: true, 
+        sameSite: 'None',
+        domain: '.axia.quest'
       });
 
       res.json({ 
@@ -74,19 +76,10 @@ class UserController {
       if (!user) {
         return res.status(404).json({ error: 'Utilisateur non trouvé' });
       }
-
-      // Extraire nom et prénom du champ name
-      const nameParts = user.name ? user.name.split(' ') : ['', ''];
-      const prenom = nameParts[0] || '';
-      const nom = nameParts.slice(1).join(' ') || '';
-
-      // Ne pas renvoyer le mot de passe
-      const { password, name, ...userWithoutPassword } = user;
+      const { password, ...userWithoutPassword } = user;
       res.json({ 
         user: {
-          ...userWithoutPassword,
-          nom: nom,
-          prenom: prenom
+          ...userWithoutPassword
         }
       });
     } catch (error) {
@@ -100,26 +93,16 @@ class UserController {
     try {
       const userId = req.params.id;
       const user = await userService.getUserById(userId);
-      
       if (!user) {
         return res.status(404).json({ error: 'Utilisateur non trouvé' });
       }
-
       // Vérifier les permissions
       if (!userService.canAccessResource(req.user, userId)) {
         return res.status(403).json({ error: 'Accès non autorisé' });
       }
-
-      // Extraire nom et prénom du champ name
-      const nameParts = user.name ? user.name.split(' ') : ['', ''];
-      const prenom = nameParts[0] || '';
-      const nom = nameParts.slice(1).join(' ') || '';
-
-      const { password, name, ...userWithoutPassword } = user;
+      const { password, ...userWithoutPassword } = user;
       res.json({
-        ...userWithoutPassword,
-        nom: nom,
-        prenom: prenom
+        ...userWithoutPassword
       });
     } catch (error) {
       console.error('Erreur récupération utilisateur:', error);
@@ -206,8 +189,18 @@ class UserController {
 
   // Déconnexion
   static logout(req, res) {
-    res.clearCookie('token');
-    res.clearCookie('user');
+    res.clearCookie('token', {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true,
+      domain: '.axia.quest'
+    });
+    res.clearCookie('user', {
+      httpOnly: false,
+      sameSite: 'None',
+      secure: true,
+      domain: '.axia.quest'
+    });
     res.json({ message: 'Déconnexion réussie' });
   }
 

@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     goToAccueil() {
-      window.location.href = 'http://localhost:4000/';
+      window.location.href = 'https://axia.quest/';
     }
   }
 }

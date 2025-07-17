@@ -5,7 +5,7 @@ const UserModel = require('../models/userModel');
 
 // Validation des données d'inscription
 function validateRegistration(userData) {
-  const { email, password, nom, prenom, type } = userData;
+  const { email, password, name, type } = userData;
   const errors = [];
 
   // Validation email
@@ -19,11 +19,8 @@ function validateRegistration(userData) {
   }
 
   // Validation nom et prénom
-  if (!nom || nom.trim().length < 2) {
+  if (!name|| name.trim().length < 2) {
     errors.push('Le nom doit contenir au moins 2 caractères');
-  }
-  if (!prenom || prenom.trim().length < 2) {
-    errors.push('Le prénom doit contenir au moins 2 caractères');
   }
 
   // Validation type
